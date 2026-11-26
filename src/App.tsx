@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Bot,
@@ -490,17 +490,16 @@ function App() {
   const [songTitle, setSongTitle] = useState("Undiporaadhey (Hushaaru)")
   const countdown = useCountdown()
 
-  const startMusicFromGate = () => {
+  const startMusicFromGate = useCallback(() => {
     const audio = audioRef.current
     if (audio) {
       audio.play().then(() => {
         setMusicOn(true)
-        setToast("♫ Playing: Undiporaadhey (Hushaaru) · Sweety's Favorite ♥")
       }).catch(() => {
-        // Autoplay handled
+        // Autoplay policy handled
       })
     }
-  }
+  }, [])
 
   // Toggle reveal state for a specific photo card
   const togglePhotoReveal = (id: string, e?: React.MouseEvent) => {

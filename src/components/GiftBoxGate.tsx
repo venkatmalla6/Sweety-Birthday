@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, KeyRound, Lock, ArrowRight } from 'lucide-react'
 
@@ -9,7 +9,7 @@ interface GiftBoxGateProps {
 
 type GateStage = 'idle' | 'prompt' | 'untying' | 'bursting_cap' | 'bursting_photos' | 'love_symbol' | 'entering'
 
-// Exact 20 Photos for the spherical ball-dimension explosion (100% verified files)
+// Exact 20 Photos for the spherical ball-dimension explosion
 const BURST_PHOTOS = [
   { src: './photos/01-hero-childhood-portrait.jpg', title: 'Childhood Star' },
   { src: './photos/02-first-birthday-memory.jpg', title: 'First Birthday' },
@@ -39,19 +39,27 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
   const [errorMsg, setErrorMsg] = useState('')
   const [shake, setShake] = useState(false)
 
+  // Use refs to prevent parent re-renders from cancelling any animation timers
+  const onUnlockRef = useRef(onUnlock)
+  const onStartMusicRef = useRef(onStartMusic)
+
+  useEffect(() => {
+    onUnlockRef.current = onUnlock
+    onStartMusicRef.current = onStartMusic
+  }, [onUnlock, onStartMusic])
+
   // Generate 3D Spherical Ball Coordinates for the 20 photos
   const sphereCoordinates = React.useMemo(() => {
     return BURST_PHOTOS.map((_, index) => {
-      // Golden spiral distribution across spherical angles
+      // Golden spiral distribution across angles
       const phi = Math.acos(-1 + (2 * index) / BURST_PHOTOS.length)
       const theta = Math.sqrt(BURST_PHOTOS.length * Math.PI) * phi
       
-      // Radius distribution: inner layer (170-220px), outer layer (250-340px)
       const isOuter = index % 2 === 0
       const radius = isOuter ? 260 + (index % 4) * 28 : 175 + (index % 3) * 25
       
       const x = radius * Math.cos(theta) * Math.sin(phi)
-      const y = radius * Math.sin(theta) * Math.sin(phi) * 0.88 // vertical viewport fit
+      const y = radius * Math.sin(theta) * Math.sin(phi) * 0.88
       const z = radius * Math.cos(phi)
       const scale = isOuter ? 0.95 : 1.12
       const rotate = ((index * 29) % 30) - 15
@@ -66,13 +74,50 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
     }
   }
 
+  const handleEnterWebsite = () => {
+    setStage('entering')
+    setTimeout(() => {
+      onUnlockRef.current()
+    }, 400)
+  }
+
+  // Master timeline triggered when password is correct
+  const startBurstSequence = () => {
+    // Stage 1: Untying ribbon (immediate)
+    setStage('untying')
+
+    // Stage 2: Cap bursts up at 600ms & song starts
+    setTimeout(() => {
+      setStage('bursting_cap')
+      if (onStartMusicRef.current) {
+        onStartMusicRef.current()
+      }
+    }, 600)
+
+    // Stage 3: Photos burst out into 3D ball constellation at 1100ms
+    setTimeout(() => {
+      setStage('bursting_photos')
+    }, 1100)
+
+    // Stage 4: Love symbol appears in center at 2100ms
+    setTimeout(() => {
+      setStage('love_symbol')
+    }, 2100)
+
+    // Stage 5: Exactly 3 seconds of showing the burst & photos (total 4100ms from unlock)
+    // Then AUTOMATICALLY navigate to the website!
+    setTimeout(() => {
+      handleEnterWebsite()
+    }, 4500)
+  }
+
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const trimmed = password.trim().toLowerCase()
 
     if (trimmed === 'thalli') {
       setErrorMsg('')
-      setStage('untying')
+      startBurstSequence()
     } else {
       setErrorMsg('Oops! That\'s not the secret key. Try "Thalli" 💖')
       setShake(true)
@@ -80,62 +125,27 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
     }
   }
 
-  const handleEnterWebsite = () => {
-    setStage('entering')
-    setTimeout(() => {
-      onUnlock()
-    }, 500)
-  }
-
-  // Handle stage transitions
-  useEffect(() => {
-    if (stage === 'untying') {
-      // Ribbon unties for 700ms, then cap bursts!
-      const timer = setTimeout(() => {
-        setStage('bursting_cap')
-        onStartMusic()
-      }, 700)
-      return () => clearTimeout(timer)
-    }
-
-    if (stage === 'bursting_cap') {
-      // Cap flies up, then photos burst outward in ball dimension
-      const timer = setTimeout(() => {
-        setStage('bursting_photos')
-      }, 600)
-      return () => clearTimeout(timer)
-    }
-
-    if (stage === 'bursting_photos') {
-      // Photos burst and orbit for 2.4s, then love symbol appears in the center
-      const timer = setTimeout(() => {
-        setStage('love_symbol')
-      }, 2400)
-      return () => clearTimeout(timer)
-    }
-
-    if (stage === 'love_symbol') {
-      // Automatically navigate to website after 3.8s of the love symbol animation!
-      const timer = setTimeout(() => {
-        handleEnterWebsite()
-      }, 3800)
-      return () => clearTimeout(timer)
-    }
-  }, [stage, onStartMusic])
-
   if (stage === 'entering') {
     return (
       <motion.div
         className="gift-gate-overlay"
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
       />
     )
   }
 
   return (
-    <div className="gift-gate-overlay">
+    <div
+      className="gift-gate-overlay"
+      onClick={() => {
+        // If photos or love symbol are already bursting, tapping anywhere will also navigate to website
+        if (stage === 'bursting_photos' || stage === 'love_symbol') {
+          handleEnterWebsite()
+        }
+      }}
+    >
       {/* Background Starfield Particles */}
       <div className="gift-gate-stars" />
       <div className="gift-gate-glow" />
@@ -259,6 +269,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
             >
               <motion.div
                 className="gift-modal-card"
@@ -319,11 +330,11 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
               const coords = sphereCoordinates[i]
               const isLoveStage = stage === 'love_symbol'
 
-              // In love stage, photos disperse outward to clear the center for the Love Symbol!
+              // In love stage, photos expand outward to clear the center for the Love Symbol!
               const targetX = isLoveStage ? coords.x * 1.55 : coords.x
               const targetY = isLoveStage ? coords.y * 1.55 : coords.y
-              const targetOpacity = isLoveStage ? 0.65 : 1
-              const targetScale = isLoveStage ? coords.scale * 0.88 : coords.scale
+              const targetOpacity = isLoveStage ? 0.7 : 1
+              const targetScale = isLoveStage ? coords.scale * 0.9 : coords.scale
 
               return (
                 <motion.div
@@ -341,7 +352,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                     type: 'spring',
                     stiffness: 90,
                     damping: 15,
-                    delay: i * 0.035, // staggered radial eruption!
+                    delay: i * 0.03,
                   }}
                 >
                   <div className="burst-photo-inner">
@@ -350,7 +361,6 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                       alt=""
                       loading="eager"
                       onError={(e) => {
-                        // Fallback gracefully without broken alt text
                         e.currentTarget.style.display = 'none'
                       }}
                     />
@@ -374,6 +384,10 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.1 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleEnterWebsite()
+              }}
             >
               {/* Pulsing Glowing Neon Heart */}
               <div className="love-heart-wrapper">
@@ -425,7 +439,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                 className="love-text-box"
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+                transition={{ delay: 0.25, duration: 0.5 }}
               >
                 <span className="love-kicker">✦ WELCOME TO YOUR 20TH CELEBRATION ✦</span>
                 <h2 className="love-title">
@@ -435,7 +449,13 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                   Every star, every picture, and every melody inside was created just for you.
                 </p>
 
-                <button onClick={handleEnterWebsite} className="love-enter-btn">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleEnterWebsite()
+                  }}
+                  className="love-enter-btn"
+                >
                   <span>Enter Your Universe ❤️</span>
                   <ArrowRight size={18} />
                 </button>
