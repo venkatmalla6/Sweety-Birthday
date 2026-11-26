@@ -12,7 +12,6 @@ import {
   Eye,
   EyeOff,
   Flame,
-  Gift,
   Heart,
   Mail,
   MapPin,
@@ -707,14 +706,6 @@ function App() {
           >
             {musicOn ? <Pause size={15} /> : <Music2 size={15} />}
             <span>{musicOn ? 'Pause' : 'Undiporaadhey ♫'}</span>
-          </button>
-          <button
-            className="sound-button gift-replay-btn"
-            onClick={() => setIsGateUnlocked(false)}
-            title="Replay the 3D Gift Box Surprise"
-          >
-            <Gift size={15} />
-            <span>Surprise 🎁</span>
           </button>
         </div>
       </nav>
