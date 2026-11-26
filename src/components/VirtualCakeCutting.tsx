@@ -276,14 +276,6 @@ export const VirtualCakeCutting: React.FC<VirtualCakeCuttingProps> = ({ onProcee
                 smile, you make the whole world brighter. Happy 20th Birthday, my favorite person! 🎂❤️"
               </em>
             </p>
-
-            {/* Optional Proceed to Sky Celebration */}
-            {onProceedToCelebration && (
-              <button onClick={onProceedToCelebration} className="cake-proceed-btn">
-                <span>Continue to Sky Celebration ✨</span>
-                <ArrowRight size={16} />
-              </button>
-            )}
           </motion.div>
         )}
       </AnimatePresence>

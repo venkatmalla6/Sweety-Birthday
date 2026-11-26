@@ -35,6 +35,7 @@ import {
 import { generateOracleBlessing } from './services/groq'
 import { GiftBoxGate } from './components/GiftBoxGate'
 import { VirtualCakeCutting } from './components/VirtualCakeCutting'
+import { SkyCelebrationModal } from './components/SkyCelebrationModal'
 
 const BIRTHDAY = new Date('2026-11-27T00:00:00')
 
@@ -434,11 +435,8 @@ function App() {
   // Interactive "Open When..." Capsules
   const [openWhenSelected, setOpenWhenSelected] = useState<string | null>(null)
 
-  // Cinematic Video Recap & Sky Celebration State
+  // Chapter 8 Sky Celebration Modal State
   const [cinematicActive, setCinematicActive] = useState(false)
-  const [cinematicStep, setCinematicStep] = useState(0)
-  const [cinematicPhase, setCinematicPhase] = useState<'slideshow' | 'assembled'>('slideshow')
-  const [fireworks, setFireworks] = useState(false)
 
   // Groq AI Cosmic Starlight Oracle State
   const [oracleTheme, setOracleTheme] = useState('Turning 20 (Two Decades of Light)')
@@ -563,30 +561,6 @@ function App() {
     }
   }, [photoIndex])
 
-  // Cinematic Video Slideshow Timer: advances pictures one by one like a video, then arranges them and blows firecrackers
-  useEffect(() => {
-    if (!cinematicActive || cinematicPhase !== 'slideshow') return
-
-    const timer = window.setInterval(() => {
-      setCinematicStep((prev) => {
-        const next = prev + 1
-        if (next >= chronologicalJourney.length) {
-          setCinematicPhase('assembled')
-          setFireworks(true)
-          const allUnlocked: Record<string, boolean> = {}
-          allPhotos.forEach((p) => {
-            allUnlocked[p.id] = true
-          })
-          setRevealedPhotos(allUnlocked)
-          return prev
-        }
-        return next
-      })
-    }, 2400)
-
-    return () => window.clearInterval(timer)
-  }, [cinematicActive, cinematicPhase])
-
   // Prevent background scroll during cinematic celebration
   useEffect(() => {
     if (cinematicActive) {
@@ -649,33 +623,9 @@ function App() {
     }))
   }
 
-  // Launch the grand cinematic celebration: pictures display 1-by-1, assemble in order, then firecrackers blow!
+  // Launch Chapter 8 Sky Celebration (20 3D Photo Balls bouncing & forming SWEETY)
   const launchFinale = () => {
     setCinematicActive(true)
-    setCinematicStep(0)
-    setCinematicPhase('slideshow')
-    setFireworks(false)
-  }
-
-  const skipToAssembled = () => {
-    setCinematicPhase('assembled')
-    setFireworks(true)
-    const allUnlocked: Record<string, boolean> = {}
-    allPhotos.forEach((p) => {
-      allUnlocked[p.id] = true
-    })
-    setRevealedPhotos(allUnlocked)
-  }
-
-  const replayCinematic = () => {
-    setCinematicStep(0)
-    setCinematicPhase('slideshow')
-    setFireworks(false)
-  }
-
-  const closeCinematic = () => {
-    setCinematicActive(false)
-    setFireworks(false)
   }
 
   const filteredGalleryPhotos = useMemo(() => {
@@ -691,8 +641,6 @@ function App() {
   const isChildhoodAllOpen = childhoodPhotos.every((p) => !!revealedPhotos[p.id])
   const isTalentsAllOpen = talentsPhotos.every((p) => !!revealedPhotos[p.id])
   const isGalleryAllOpen = filteredGalleryPhotos.every((p) => !!revealedPhotos[p.id])
-
-  const activeCinematicPhoto = chronologicalJourney[cinematicStep] || chronologicalJourney[0]
 
   return (
     <main>
@@ -2001,12 +1949,7 @@ function App() {
 
       {/* Section 7: Cake & Wish */}
       <section className="cake-section section-wrap" id="cake">
-        <VirtualCakeCutting
-          onProceedToCelebration={() => {
-            const el = document.getElementById('finale')
-            if (el) el.scrollIntoView({ behavior: 'smooth' })
-          }}
-        />
+        <VirtualCakeCutting />
       </section>
 
       {/* Section 8: Birthday Finale (Photo 13) */}
@@ -2077,221 +2020,13 @@ function App() {
       </footer>
 
       {/* =========================================================================
-          GRAND CINEMATIC MEMORY RECAP & SKY FIRECRACKERS MODAL
+          CHAPTER EIGHT: GRAND SKY CELEBRATION (20 3D PHOTO BALLS BOUNCING & FORMING "SWEETY")
           ========================================================================= */}
-      <AnimatePresence>
-        {cinematicActive && (
-          <motion.div
-            className="cinematic-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Top Bar Controls */}
-            <div className="cinematic-topbar">
-              <div className="cinematic-brand">
-                <span className="brand-dot">✦</span>
-                {cinematicPhase === 'slideshow'
-                  ? `SWEETY'S MEMORY RECAP · CHAPTER ${cinematicStep + 1} OF ${chronologicalJourney.length}`
-                  : `✦ ALL ${chronologicalJourney.length} MEMORIES ASSEMBLED IN ORDER · SKY CELEBRATION ✦`}
-              </div>
-
-              <div className="cinematic-actions">
-                {cinematicPhase === 'slideshow' ? (
-                  <button className="cinematic-btn" onClick={skipToAssembled} title="Skip to firecrackers celebration">
-                    <SkipForward size={14} />
-                    <span>SKIP TO CELEBRATION</span>
-                  </button>
-                ) : (
-                  <button className="cinematic-btn" onClick={replayCinematic} title="Replay video slideshow from start">
-                    <RotateCcw size={14} />
-                    <span>REPLAY RECAP</span>
-                  </button>
-                )}
-
-                <button className="cinematic-close-btn" onClick={closeCinematic} aria-label="Close celebration">
-                  <X size={18} />
-                </button>
-              </div>
-            </div>
-
-            {/* Slideshow Progress Bar */}
-            <div className="cinematic-progress-track">
-              <motion.div
-                className="cinematic-progress-fill"
-                initial={false}
-                animate={{
-                  width:
-                    cinematicPhase === 'slideshow'
-                      ? `${((cinematicStep + 1) / chronologicalJourney.length) * 100}%`
-                      : '100%',
-                }}
-                transition={{ duration: 0.3 }}
-              />
-            </div>
-
-            {/* PHASE 1: Displaying each picture one by one like a video */}
-            {cinematicPhase === 'slideshow' && (
-              <div className="cinematic-stage">
-                <div className="cinematic-centerpiece">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      className="cinematic-photo-card"
-                      key={activeCinematicPhoto.id}
-                      initial={{ opacity: 0, scale: 0.94, y: 15 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 1.05, y: -10 }}
-                      transition={{ duration: 0.65, ease: 'easeOut' }}
-                    >
-                      <div className="cinematic-photo-frame">
-                        <img
-                          src={activeCinematicPhoto.src}
-                          alt={activeCinematicPhoto.title}
-                          className="cinematic-img"
-                          style={{ objectPosition: activeCinematicPhoto.objectPosition }}
-                        />
-                        <div className="cinematic-photo-glow" />
-                        <span className="cinematic-badge">
-                          {activeCinematicPhoto.categoryLabel} · CHAPTER {activeCinematicPhoto.number}
-                        </span>
-                      </div>
-                      <div className="cinematic-caption">
-                        <span className="cinematic-date">{activeCinematicPhoto.date}</span>
-                        <h3>{activeCinematicPhoto.title}</h3>
-                        <p>{activeCinematicPhoto.note}</p>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* Bottom tray: Arranging each picture into order step by step */}
-                <div className="cinematic-order-tray">
-                  <div className="tray-label">
-                    <span>✦ MEMORIES ARRANGING IN ORDER ({cinematicStep + 1} / {chronologicalJourney.length}) ✦</span>
-                  </div>
-                  <div className="tray-strip">
-                    {chronologicalJourney.map((photo, i) => {
-                      const isFilled = i <= cinematicStep
-                      const isCurrent = i === cinematicStep
-                      return (
-                        <div
-                          className={`tray-slot ${isFilled ? 'filled' : 'empty'} ${isCurrent ? 'active-slot' : ''}`}
-                          key={photo.id}
-                        >
-                          {isFilled ? (
-                            <img
-                              src={photo.src}
-                              alt={photo.title}
-                              className="tray-thumb"
-                              style={{ objectPosition: photo.objectPosition }}
-                            />
-                          ) : (
-                            <span className="tray-placeholder-number">{String(i + 1).padStart(2, '0')}</span>
-                          )}
-                          {isCurrent && <span className="tray-current-indicator">✦</span>}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* PHASE 2: After all 20 pictures displayed -> Assembled in order + Firecrackers Blow! */}
-            {cinematicPhase === 'assembled' && (
-              <div className="cinematic-assembled-stage">
-                <div className="assembled-header">
-                  <motion.div
-                    className="celebration-tagline-box"
-                    initial={{ opacity: 0, y: -16, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.7 }}
-                  >
-                    <span className="banner-kicker">✦ THE SKY CELEBRATES YOU · NOVEMBER 27 ✦</span>
-                    <h1 className="banner-main-title">
-                      YOU DESERVE THE WHOLE SKY <span className="title-heart">♥</span>
-                    </h1>
-                    <p className="banner-sub">
-                      Happy Birthday, Sweety Thalli · Every Beautiful Memory Assembled in Order
-                    </p>
-                  </motion.div>
-                </div>
-
-                {/* The Complete 20 Photos Arranged in Perfect Order */}
-                <div className="assembled-grid-container">
-                  <div className="assembled-grid">
-                    {chronologicalJourney.map((photo, index) => (
-                      <motion.div
-                        className="assembled-card"
-                        key={photo.id}
-                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ delay: index * 0.05, duration: 0.5 }}
-                        onClick={() => openPhotoById(photo.id)}
-                        role="button"
-                        tabIndex={0}
-                        title={`View ${photo.title} in full resolution`}
-                      >
-                        <div className="assembled-photo-frame">
-                          <img
-                            src={photo.src}
-                            alt={photo.title}
-                            style={{ objectPosition: photo.objectPosition }}
-                          />
-                          <span className="assembled-number">{String(index + 1).padStart(2, '0')}</span>
-                          <span className="card-zoom-pill">
-                            <Maximize2 size={11} />
-                          </span>
-                        </div>
-                        <div className="assembled-info">
-                          <h4>{photo.title}</h4>
-                          <span>{photo.date}</span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* GRAND FIRECRACKERS & FIREWORKS BURSTS */}
-            {fireworks && (
-              <div className="grand-firecrackers-layer" aria-hidden="true">
-                <div className="firework fw-1">✦</div>
-                <div className="firework fw-2">✧</div>
-                <div className="firework fw-3">✹</div>
-                <div className="firework fw-4">✸</div>
-                <div className="firework fw-5">✦</div>
-                <div className="firework fw-6">✧</div>
-                <div className="firework fw-7">✹</div>
-                <div className="firework fw-8">✸</div>
-                <div className="firework fw-9">✦</div>
-                <div className="firework fw-10">✧</div>
-                <div className="firework fw-11">✹</div>
-                <div className="firework fw-12">✸</div>
-                <div className="firework fw-13">✦</div>
-                <div className="firework fw-14">✧</div>
-                <div className="firework fw-15">✹</div>
-                <div className="firework fw-16">✸</div>
-                <div className="firework fw-17">✦</div>
-                <div className="firework fw-18">✧</div>
-                <div className="firework fw-sparkle-1">✦</div>
-                <div className="firework fw-sparkle-2">✧</div>
-                <div className="firework fw-sparkle-3">✹</div>
-                <div className="firework fw-sparkle-4">✦</div>
-                <div className="firework fw-sparkle-5">✧</div>
-                <div className="firework fw-sparkle-6">✹</div>
-                <div className="firework fw-sparkle-7">★</div>
-                <div className="firework fw-sparkle-8">★</div>
-                <div className="firework fw-rocket-1">| ✦</div>
-                <div className="firework fw-rocket-2">| ✧</div>
-                <div className="firework fw-rocket-3">| ✹</div>
-                <div className="firework fw-rocket-4">| ✦</div>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <SkyCelebrationModal
+        isOpen={cinematicActive}
+        onClose={() => setCinematicActive(false)}
+        onOpenPhoto={(photoId) => openPhotoById(photoId)}
+      />
 
       {/* Enhanced Lightbox */}
       <AnimatePresence>
