@@ -1361,13 +1361,13 @@ function App() {
       </section>
 
       {/* =========================================================================
-          NEW CHAPTER EIGHT: ALL ABOUT SWEETY (HER PERSONAL UNIVERSE)
-          Replaces the old generic surprise section with deeply personal, interactive features!
+          HER PERSONAL UNIVERSE: ALL ABOUT SWEETY
+          Deeply personal, interactive features!
           ========================================================================= */}
       <section className="about-section" id="about">
         <div className="section-wrap">
           <div className="section-heading">
-            <div className="section-kicker">CHAPTER EIGHT · HER PERSONAL UNIVERSE</div>
+            <div className="section-kicker">HER PERSONAL UNIVERSE · ALL ABOUT SWEETY</div>
             <h2>
               Everything that makes <em>Sweety, Sweety.</em>
             </h2>
@@ -2039,11 +2039,11 @@ function App() {
         <p className="micro-note">Tap the candles or button to begin the grand celebration.</p>
       </section>
 
-      {/* Section 9: Birthday Finale (Photo 13) */}
+      {/* Section 8: Birthday Finale (Photo 13) */}
       <section className="finale-section" id="finale">
         <div className="finale-stars" />
         <div className="section-wrap finale-content">
-          <div className="section-kicker">CHAPTER NINE · CELEBRATING YOU</div>
+          <div className="section-kicker">CHAPTER EIGHT · CELEBRATING YOU</div>
           <div className="final-heart">♥</div>
           <h2>
             Wherever life takes you, <em>be happy.</em>
