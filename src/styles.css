@@ -1362,127 +1362,468 @@ a {
   margin: 0;
 }
 
-/* Cake Section */
+/* ==========================================================================
+   Chapter 7: Virtual 3D Cake & Slicing Interactive Experience
+   ========================================================================== */
 .cake-section {
   text-align: center;
-  padding: 115px 0 125px;
-}
-
-.cake-copy {
-  margin-bottom: 25px;
-}
-
-.cake-scene {
-  width: 270px;
-  height: 260px;
-  margin: 20px auto 10px;
+  padding: 100px 0 110px;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 32px;
+  overflow: hidden;
 }
 
-.cake-glow {
-  position: absolute;
-  width: 230px;
-  height: 170px;
-  bottom: 30px;
-  background: #8c2e42;
-  filter: blur(65px);
-  opacity: 0.2;
-}
-
-.candles {
-  display: flex;
-  gap: 29px;
-  position: absolute;
-  top: 24px;
-  z-index: 3;
-}
-
-.candle {
-  height: 55px;
-  width: 9px;
-  border: 0;
-  border-radius: 3px;
-  background: repeating-linear-gradient(135deg, #e6c9a6 0 5px, #9b3f50 5px 9px);
+.virtual-cake-container {
+  max-width: 780px;
+  margin: 0 auto;
   position: relative;
-}
-
-.flame {
-  position: absolute;
-  width: 12px;
-  height: 18px;
-  background: radial-gradient(ellipse at 50% 65%, #fff3bd 0 18%, #ffbd5d 45%, #e65d35 72%, transparent 74%);
-  border-radius: 60% 40% 60% 40%;
-  left: -2px;
-  top: -22px;
-  filter: drop-shadow(0 0 8px #f3a64f);
-  animation: flicker 0.6s infinite alternate;
-}
-
-.flame.out {
-  display: none;
-}
-
-.cake-top {
-  width: 150px;
-  height: 24px;
-  border-radius: 50%;
-  background: #f1d6c5;
-  position: absolute;
-  bottom: 112px;
   z-index: 2;
-  border: 5px solid #a44b5b;
 }
 
-.cake-body {
-  width: 180px;
-  height: 95px;
-  border-radius: 12px 12px 24px 24px;
-  background: linear-gradient(90deg, #6d1f31, #b65a69 50%, #6d1f31);
-  position: absolute;
-  bottom: 40px;
-  z-index: 1;
-  box-shadow: inset 0 -10px 0 #4c1725, 0 15px 25px #0008;
+.cake-header {
+  margin-bottom: 24px;
+}
+
+.cake-sub-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.cake-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 5.5vw, 64px);
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 12px;
+  line-height: 1.05;
+}
+
+.cake-title em {
+  font-family: 'Great Vibes', cursive;
+  color: #ff94b2;
+  font-weight: 400;
+}
+
+.cake-desc {
+  font-size: 13.5px;
+  color: #cfbcbb;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* 3D Arena */
+.cake-3d-arena {
+  position: relative;
+  width: 360px;
+  height: 330px;
+  margin: 20px auto 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
 }
 
-.cake-drip {
+.cake-aura {
   position: absolute;
-  top: -5px;
-  color: #f1d6c5;
-  font-size: 14px;
+  width: 280px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(175, 45, 75, 0.5) 0%, rgba(212, 175, 55, 0.2) 45%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  transition: opacity 0.6s ease;
 }
 
-.cake-script {
-  font-family: 'Great Vibes', cursive;
-  font-size: 35px;
-  color: #f4d9c9;
-  margin-top: 15px;
+.cake-aura.dimmed {
+  opacity: 0.35;
 }
 
-.cake-plate {
+.cake-board-3d {
+  width: 280px;
+  height: 280px;
+  position: relative;
+  transform: rotateX(46deg) rotateZ(-10deg);
+  transform-style: preserve-3d;
+}
+
+.cake-platter-disc {
   position: absolute;
-  bottom: 28px;
-  width: 240px;
-  height: 18px;
+  inset: -22px;
   border-radius: 50%;
-  background: linear-gradient(#d7b89b, #76504b);
-  box-shadow: 0 8px 20px #0008;
+  background: radial-gradient(circle, #e0be9b 0%, #8c5a45 65%, #3d211b 100%);
+  border: 3px solid #d4af37;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(212, 175, 55, 0.35);
 }
 
-.cake-section>.primary-button {
-  margin-top: 24px;
+.cake-pie-wrapper {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 20px auto;
+  border-radius: 50%;
 }
 
-.cake-scene.wished .cake-glow {
-  opacity: 0.55;
+.cake-slice-sector {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  transform-origin: center center;
+  transition: filter 0.2s ease;
+}
+
+.cake-slice-sector:hover {
+  filter: brightness(1.12);
+}
+
+.slice-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65));
+}
+
+.slice-garnish {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.garnish-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff2a5f 0%, #990022 100%);
+  border: 1px solid #ffd700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.cake-center-rosette {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffd700 0%, #b8860b 80%, #634305 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.cake-age-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a0a0f;
+  line-height: 1;
+}
+
+.cake-heart-mini {
+  font-size: 10px;
+  color: #8c1d33;
+  line-height: 1;
+}
+
+/* Candles */
+.cake-candles-rig {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.birthday-candle {
+  position: absolute;
+  width: 12px;
+  height: 46px;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.candle-pos-1 {
+  top: 40px;
+  left: 65px;
+}
+
+.candle-pos-2 {
+  top: 30px;
+  left: 114px;
+}
+
+.candle-pos-3 {
+  top: 40px;
+  right: 65px;
+}
+
+.candle-body-spiral {
+  width: 8px;
+  height: 38px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(135deg, #fceca2 0 4px, #a82e44 4px 8px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.candle-wick {
+  width: 2px;
+  height: 6px;
+  background: #333;
+}
+
+.candle-flame-glow {
+  position: absolute;
+  top: -14px;
+  width: 14px;
+  height: 20px;
+  background: radial-gradient(ellipse at 50% 65%, #ffffff 0%, #ffde59 35%, #ff5722 75%, transparent 85%);
+  border-radius: 50% 50% 35% 35%;
+  filter: drop-shadow(0 0 10px #ffbd5d);
+  animation: flameFlicker 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes flameFlicker {
+  0% { transform: scale(0.95) rotate(-2deg); }
+  100% { transform: scale(1.08) rotate(2deg); }
+}
+
+.smoke-wisp {
+  position: absolute;
+  top: -10px;
+  width: 16px;
+  height: 28px;
+  background: radial-gradient(ellipse, rgba(220, 220, 220, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+/* The Golden Cake Knife (Chaku) */
+.cake-knife-chaku {
+  position: absolute;
+  top: 25px;
+  right: 15px;
+  width: 42px;
+  height: 170px;
+  z-index: 60;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.75));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cake-knife-chaku:active {
+  cursor: grabbing;
+}
+
+.cake-knife-chaku.is-cutting-motion {
+  transform: translateY(25px) rotate(10deg) scale(1.08);
+}
+
+.knife-blade-metal {
+  position: relative;
+  width: 14px;
+  height: 105px;
+  background: linear-gradient(90deg, #d8d8d8 0%, #ffffff 40%, #a8a8a8 85%, #686868 100%);
+  border-radius: 3px 3px 18px 2px;
+  border-left: 1.5px solid #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.knife-edge-sparkle {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.9) 50%, transparent 100%);
+  opacity: 0.7;
+}
+
+.knife-guard-gold {
+  width: 32px;
+  height: 10px;
+  background: linear-gradient(90deg, #ffd700 0%, #b8860b 100%);
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.knife-hilt-ruby {
+  width: 16px;
+  height: 50px;
+  background: linear-gradient(90deg, #6e1729 0%, #9e2a40 50%, #470e1a 100%);
+  border-radius: 0 0 6px 6px;
+  border: 1px solid #d4af37;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.knife-hint-pill {
+  position: absolute;
+  top: -38px;
+  right: -30px;
+  white-space: nowrap;
+  background: rgba(30, 15, 21, 0.92);
+  border: 1px solid #d4af37;
+  color: #fceca2;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* Actions Row */
+.cake-actions-row {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.cake-slicing-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cut-slice-btn.btn-completed {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  border-color: #81c784;
+}
+
+.cake-reset-btn {
+  background: rgba(30, 15, 21, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #f0d5c8;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.cake-reset-btn:hover {
+  background: rgba(50, 20, 32, 0.95);
+  color: #ffffff;
+  border-color: #d4af37;
+}
+
+/* Heartfelt Love Letter Card */
+.cake-love-letter-card {
+  background: linear-gradient(145deg, rgba(38, 18, 26, 0.96) 0%, rgba(16, 10, 14, 0.98) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  border-radius: 24px;
+  padding: 34px 30px;
+  max-width: 620px;
+  margin: 34px auto 0;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.8), 0 0 35px rgba(110, 23, 41, 0.45);
+  text-align: center;
+  position: relative;
+}
+
+.cake-letter-seal {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #e63956 0%, #8c172d 100%);
+  border: 2px solid #ffd700;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  margin: -56px auto 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.cake-letter-tag {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.cake-love-letter-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.cake-letter-body {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: #f7e8e5;
+  margin: 0 0 14px;
+  font-style: italic;
+}
+
+.cake-letter-highlight {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #ffc2d1;
+  margin: 0 0 24px;
+  font-style: italic;
+}
+
+.cake-proceed-btn {
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+  color: #12090c;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 13px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cake-proceed-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(212, 175, 55, 0.6);
+}
+
+@media (max-width: 600px) {
+  .cake-3d-arena {
+    width: 300px;
+    height: 280px;
+  }
+
+  .cake-board-3d {
+    width: 240px;
+    height: 240px;
+  }
+
+  .cake-love-letter-card {
+    padding: 26px 20px;
+  }
 }
 
 /* ==========================================================================

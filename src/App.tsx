@@ -34,6 +34,7 @@ import {
 } from 'lucide-react'
 import { generateOracleBlessing } from './services/groq'
 import { GiftBoxGate } from './components/GiftBoxGate'
+import { VirtualCakeCutting } from './components/VirtualCakeCutting'
 
 const BIRTHDAY = new Date('2026-11-27T00:00:00')
 
@@ -2000,43 +2001,12 @@ function App() {
 
       {/* Section 7: Cake & Wish */}
       <section className="cake-section section-wrap" id="cake">
-        <div className="section-kicker">CHAPTER SEVEN · MAKE A WISH</div>
-        <h2>
-          One wish, <em>just for you.</em>
-        </h2>
-        <p className="cake-copy">May this year bring you peace, inner strength, sweet laughter, and cherished dreams coming true.</p>
-        <div className={`cake-scene ${wished ? 'wished' : ''}`}>
-          <div className="cake-glow" />
-          <div className="candles">
-            {[0, 1, 2].map((n) => (
-              <button
-                className={`candle candle-${n + 1}`}
-                key={n}
-                onClick={() => setCakeLit(!cakeLit)}
-                aria-label="Toggle candle flame"
-              >
-                <span className={`flame ${cakeLit ? '' : 'out'}`} />
-              </button>
-            ))}
-          </div>
-          <div className="cake-top" />
-          <div className="cake-body">
-            <span className="cake-drip">♥　♥　♥</span>
-            <span className="cake-script">for you</span>
-          </div>
-          <div className="cake-plate" />
-        </div>
-        <button
-          className="primary-button"
-          onClick={() => {
-            setCakeLit(false)
-            setWished(true)
-            launchFinale()
+        <VirtualCakeCutting
+          onProceedToCelebration={() => {
+            const el = document.getElementById('finale')
+            if (el) el.scrollIntoView({ behavior: 'smooth' })
           }}
-        >
-          {wished ? 'REPLAY THE CELEBRATION ♥' : 'BLOW OUT THE CANDLES & CELEBRATE'} <Sparkles size={16} />
-        </button>
-        <p className="micro-note">Tap the candles or button to begin the grand celebration.</p>
+        />
       </section>
 
       {/* Section 8: Birthday Finale (Photo 13) */}
