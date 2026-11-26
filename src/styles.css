@@ -5144,8 +5144,7 @@ footer {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 15%;
-  height: 60px;
+  height: 40px;
   pointer-events: none;
   z-index: 2;
   transition: opacity 1.5s ease;
@@ -5158,20 +5157,21 @@ footer {
 .floor-neon-beam {
   position: absolute;
   top: 0;
-  left: 2%;
-  right: 2%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.5) 15%, #ffd700 50%, rgba(255, 215, 0, 0.5) 85%, transparent 100%);
-  box-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255, 180, 50, 0.7);
+  left: 1%;
+  right: 1%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.4) 10%, #ffd700 50%, rgba(255, 215, 0, 0.4) 90%, transparent 100%);
+  box-shadow: 0 0 15px #ffd700, 0 0 35px rgba(255, 190, 60, 0.9), 0 0 60px rgba(255, 140, 0, 0.6);
+  border-radius: 2px;
 }
 
-.floor-perspective-grid {
+.floor-reflection-zone {
   position: absolute;
-  top: 2px;
+  top: 3px;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(255, 215, 0, 0.1) 0%, transparent 80%);
+  height: 35px;
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.12) 0%, transparent 80%);
 }
 
 /* SVG Constellation Lines */
@@ -5210,35 +5210,45 @@ footer {
 
 .celebration-ball-anchor {
   position: absolute;
-  transform: translate(-50%, -50%);
   width: clamp(42px, 5.2vw, 66px);
   height: clamp(42px, 5.2vw, 66px);
   z-index: 15;
 }
 
-/* Floor Shadow under each bouncing ball */
-.ball-floor-shadow {
+/* When bouncing on floor: Anchor is translated -50% X, -100% Y so the ball sits STRICTLY ABOVE the line */
+.celebration-ball-anchor.anchor-above-floor {
+  transform: translate(-50%, -100%);
+  margin-top: -1px;
+}
+
+/* When forming SWEETY: Anchor is centered at the letter point */
+.celebration-ball-anchor.anchor-letter-center {
+  transform: translate(-50%, -50%);
+}
+
+/* Floor Contact Shadow (Sits directly on the floor beam) */
+.ball-floor-contact-shadow {
   position: absolute;
-  bottom: -16px;
+  bottom: -4px;
   left: 50%;
   transform: translateX(-50%);
   width: clamp(34px, 4.5vw, 54px);
-  height: 10px;
+  height: 8px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(20, 5, 10, 0.4) 60%, transparent 80%);
-  filter: blur(2.5px);
-  animation: floorShadowPulse 1.25s infinite ease-in-out;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.95) 0%, rgba(255, 215, 0, 0.45) 40%, transparent 75%);
+  filter: blur(2px);
+  animation: floorContactPulse 1.25s infinite ease-in-out;
   pointer-events: none;
 }
 
-@keyframes floorShadowPulse {
+@keyframes floorContactPulse {
   0%, 100% {
     transform: translateX(-50%) scaleX(1);
-    opacity: 0.75;
+    opacity: 0.85;
   }
   50% {
-    transform: translateX(-50%) scaleX(0.45);
-    opacity: 0.2;
+    transform: translateX(-50%) scaleX(0.4);
+    opacity: 0.15;
   }
 }
 
@@ -5250,20 +5260,21 @@ footer {
   outline: none;
 }
 
-.ball-bounce-wrapper.animate-floor-bounce {
-  animation: floorRealisticBounce 1.25s infinite cubic-bezier(0.28, 0.84, 0.42, 1);
+/* Bounce animation strictly UPWARD into the air above the floor line */
+.ball-bounce-wrapper.animate-above-floor-bounce {
+  animation: floorAboveLineBounce 1.25s infinite cubic-bezier(0.28, 0.84, 0.42, 1);
 }
 
 .ball-bounce-wrapper.animate-constellation-float {
   animation: constellationFloat 3s infinite ease-in-out alternate;
 }
 
-@keyframes floorRealisticBounce {
+@keyframes floorAboveLineBounce {
   0%, 100% {
-    transform: translateY(0px) scale(1.05, 0.95);
+    transform: translateY(0px) scale(1.06, 0.94); /* Resting on line with slight squash */
   }
   50% {
-    transform: translateY(-28px) scale(0.96, 1.04);
+    transform: translateY(-38px) scale(0.96, 1.04); /* Jumps UP into the air above the line! */
   }
 }
 
@@ -5571,6 +5582,108 @@ footer {
   .celebration-photos-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+}
+
+/* =========================================================================
+   PARTY POPPERS ("WAPPERS") BURST MODE WITH STARS
+   ========================================================================= */
+.party-poppers-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 80;
+  overflow: hidden;
+}
+
+.popper-cannon {
+  position: absolute;
+  bottom: 8%;
+  font-size: clamp(38px, 5.5vw, 62px);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 40px rgba(255, 120, 150, 0.7));
+  z-index: 85;
+}
+
+.popper-left {
+  left: 4%;
+}
+
+.popper-right {
+  right: 4%;
+}
+
+.popper-cone {
+  display: inline-block;
+  animation: popperRecoil 0.7s infinite alternate ease-in-out;
+}
+
+@keyframes popperRecoil {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.22);
+  }
+}
+
+.popper-burst-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 215, 0, 0.7);
+  animation: popperRingPulse 1.2s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes popperRingPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
+
+.starburst-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.starburst-particle {
+  position: absolute;
+  font-weight: 700;
+  pointer-events: none;
+  text-shadow: 0 0 10px currentColor, 0 0 20px rgba(255, 255, 255, 0.95), 0 0 35px currentColor;
+  z-index: 90;
+  transform-origin: center center;
+  user-select: none;
+}
+
+.pop-again-btn {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(212, 175, 55, 0.9)) !important;
+  color: #fff !important;
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
+  animation: popBtnPulse 2s infinite ease-in-out alternate;
+}
+
+@keyframes popBtnPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.9);
   }
 }
 

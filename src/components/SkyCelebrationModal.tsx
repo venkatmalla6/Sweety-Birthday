@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, RotateCcw, X, Grid, Eye, FastForward } from 'lucide-react'
+import { Sparkles, RotateCcw, X, Grid, Eye, FastForward, PartyPopper } from 'lucide-react'
 
 export interface CelebrationPhotoItem {
   id: string
@@ -39,43 +39,60 @@ export interface BallCoord {
   letterX: number
   letterY: number
   floorX: number
-  floorY: number
 }
 
 // 20 Exact Coordinates: 3 for S, 5 for W, 3 for E, 3 for E, 3 for T, 3 for Y = 20 balls!
+// Spaced horizontally across the floor from 4.5% to 94.5%
 export const SWEETY_BALL_COORDS: BallCoord[] = [
   // Letter S (3 balls)
-  { letter: 'S', letterX: 13, letterY: 22, floorX: 5.0, floorY: 77 },
-  { letter: 'S', letterX: 7.5, letterY: 46, floorX: 9.6, floorY: 81 },
-  { letter: 'S', letterX: 13, letterY: 70, floorX: 14.2, floorY: 77 },
+  { letter: 'S', letterX: 13, letterY: 22, floorX: 4.8 },
+  { letter: 'S', letterX: 7.5, letterY: 46, floorX: 9.5 },
+  { letter: 'S', letterX: 13, letterY: 70, floorX: 14.2 },
 
   // Letter W (5 balls)
-  { letter: 'W', letterX: 19, letterY: 22, floorX: 18.8, floorY: 81 },
-  { letter: 'W', letterX: 22.5, letterY: 70, floorX: 23.4, floorY: 77 },
-  { letter: 'W', letterX: 26, letterY: 42, floorX: 28.0, floorY: 81 },
-  { letter: 'W', letterX: 29.5, letterY: 70, floorX: 32.6, floorY: 77 },
-  { letter: 'W', letterX: 33, letterY: 22, floorX: 37.2, floorY: 81 },
+  { letter: 'W', letterX: 19, letterY: 22, floorX: 18.9 },
+  { letter: 'W', letterX: 22.5, letterY: 70, floorX: 23.6 },
+  { letter: 'W', letterX: 26, letterY: 42, floorX: 28.3 },
+  { letter: 'W', letterX: 29.5, letterY: 70, floorX: 33.0 },
+  { letter: 'W', letterX: 33, letterY: 22, floorX: 37.7 },
 
   // Letter E1 (3 balls)
-  { letter: 'E', letterX: 45, letterY: 22, floorX: 41.8, floorY: 77 },
-  { letter: 'E', letterX: 43.5, letterY: 46, floorX: 46.4, floorY: 81 },
-  { letter: 'E', letterX: 45, letterY: 70, floorX: 51.0, floorY: 77 },
+  { letter: 'E', letterX: 45, letterY: 22, floorX: 42.4 },
+  { letter: 'E', letterX: 43.5, letterY: 46, floorX: 47.1 },
+  { letter: 'E', letterX: 45, letterY: 70, floorX: 51.8 },
 
   // Letter E2 (3 balls)
-  { letter: 'E', letterX: 58, letterY: 22, floorX: 55.6, floorY: 81 },
-  { letter: 'E', letterX: 56.5, letterY: 46, floorX: 60.2, floorY: 77 },
-  { letter: 'E', letterX: 58, letterY: 70, floorX: 64.8, floorY: 81 },
+  { letter: 'E', letterX: 58, letterY: 22, floorX: 56.5 },
+  { letter: 'E', letterX: 56.5, letterY: 46, floorX: 61.2 },
+  { letter: 'E', letterX: 58, letterY: 70, floorX: 65.9 },
 
   // Letter T (3 balls)
-  { letter: 'T', letterX: 66, letterY: 22, floorX: 69.4, floorY: 77 },
-  { letter: 'T', letterX: 76, letterY: 22, floorX: 74.0, floorY: 81 },
-  { letter: 'T', letterX: 71, letterY: 70, floorX: 78.6, floorY: 77 },
+  { letter: 'T', letterX: 66, letterY: 22, floorX: 70.6 },
+  { letter: 'T', letterX: 76, letterY: 22, floorX: 75.3 },
+  { letter: 'T', letterX: 71, letterY: 70, floorX: 80.0 },
 
   // Letter Y (3 balls)
-  { letter: 'Y', letterX: 82.5, letterY: 22, floorX: 83.2, floorY: 81 },
-  { letter: 'Y', letterX: 93.5, letterY: 22, floorX: 87.8, floorY: 77 },
-  { letter: 'Y', letterX: 88, letterY: 70, floorX: 92.4, floorY: 81 },
+  { letter: 'Y', letterX: 82.5, letterY: 22, floorX: 84.7 },
+  { letter: 'Y', letterX: 93.5, letterY: 22, floorX: 89.4 },
+  { letter: 'Y', letterX: 88, letterY: 70, floorX: 94.1 },
 ]
+
+// Starburst Particle for Party Poppers
+interface StarBurst {
+  id: number
+  x: number // start X%
+  y: number // start Y%
+  targetX: number // target fly X%
+  targetY: number // target fly Y%
+  size: number
+  symbol: string
+  color: string
+  duration: number
+  delay: number
+}
+
+// Fixed floor baseline percentage in viewport
+export const FLOOR_LINE_Y_PCT = 74
 
 interface SkyCelebrationModalProps {
   isOpen: boolean
@@ -93,63 +110,154 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
   const [phase, setPhase] = useState<CelebrationPhase>('bouncing')
   const [visibleBalls, setVisibleBalls] = useState<number>(1)
   const [hoveredPhoto, setHoveredPhoto] = useState<CelebrationPhotoItem | null>(null)
+  const [starBursts, setStarBursts] = useState<StarBurst[]>([])
+  const [popperTriggerCount, setPopperTriggerCount] = useState(0)
   const timerRef = useRef<number | null>(null)
 
-  // Web Audio celebratory starlight chime when SWEETY forms
-  const playStarlightChimes = () => {
+  // Generate explosive star burst particles from party popper cannons and around SWEETY
+  const triggerStarBursts = useCallback(() => {
+    const symbols = ['★', '✦', '✧', '✯', '⋆', '✨', '⭐']
+    const colors = ['#ffd700', '#fff3b0', '#ff85a2', '#ff5983', '#70d6ff', '#ffffff', '#ffbe0b', '#e0aaff']
+    const newStars: StarBurst[] = []
+
+    // 35 stars exploding from Left Popper (bottom-left corner at 6%, 82%)
+    for (let i = 0; i < 35; i++) {
+      newStars.push({
+        id: Date.now() + Math.random(),
+        x: 6,
+        y: 82,
+        targetX: 10 + Math.random() * 55,
+        targetY: 10 + Math.random() * 65,
+        size: 14 + Math.random() * 22,
+        symbol: symbols[Math.floor(Math.random() * symbols.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+        duration: 1.2 + Math.random() * 0.8,
+        delay: Math.random() * 0.35,
+      })
+    }
+
+    // 35 stars exploding from Right Popper (bottom-right corner at 94%, 82%)
+    for (let i = 0; i < 35; i++) {
+      newStars.push({
+        id: Date.now() + Math.random() + 100,
+        x: 94,
+        y: 82,
+        targetX: 35 + Math.random() * 55,
+        targetY: 10 + Math.random() * 65,
+        size: 14 + Math.random() * 22,
+        symbol: symbols[Math.floor(Math.random() * symbols.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+        duration: 1.2 + Math.random() * 0.8,
+        delay: Math.random() * 0.35,
+      })
+    }
+
+    // 30 stars erupting radially around the SWEETY letters
+    for (let i = 0; i < 30; i++) {
+      const originX = 15 + Math.random() * 70
+      const originY = 25 + Math.random() * 45
+      const angle = Math.random() * Math.PI * 2
+      const dist = 60 + Math.random() * 140
+      newStars.push({
+        id: Date.now() + Math.random() + 200,
+        x: originX,
+        y: originY,
+        targetX: originX + (Math.cos(angle) * dist) / 10,
+        targetY: originY + (Math.sin(angle) * dist) / 10,
+        size: 16 + Math.random() * 24,
+        symbol: symbols[Math.floor(Math.random() * symbols.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+        duration: 1.0 + Math.random() * 0.7,
+        delay: 0.15 + Math.random() * 0.4,
+      })
+    }
+
+    setStarBursts(newStars)
+    setPopperTriggerCount((prev) => prev + 1)
+  }, [])
+
+  // Web Audio festive Party Popper POP + Starlight Chimes
+  const playPopperCelebrationAudio = useCallback(() => {
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
       if (!AudioCtx) return
       const ctx = new AudioCtx()
+
+      // 1. Party Popper Cannon "POP" sound
+      const bufferSize = Math.floor(ctx.sampleRate * 0.16)
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+      const output = buffer.getChannelData(0)
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.025))
+      }
+      const noise = ctx.createBufferSource()
+      noise.buffer = buffer
+      const filter = ctx.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(850, ctx.currentTime)
+      filter.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.14)
+      const popGain = ctx.createGain()
+      popGain.gain.setValueAtTime(0.4, ctx.currentTime)
+      popGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15)
+      noise.connect(filter)
+      filter.connect(popGain)
+      popGain.connect(ctx.destination)
+      noise.start()
+
+      // 2. Uplifting Starlight Chime Arpeggio
       const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51] // C5, E5, G5, C6, E6
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator()
         const gain = ctx.createGain()
         osc.type = 'sine'
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12)
-        gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.12)
-        gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + idx * 0.12 + 0.05)
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 1.2)
+        const startTime = ctx.currentTime + 0.06 + idx * 0.09
+        osc.frequency.setValueAtTime(freq, startTime)
+        gain.gain.setValueAtTime(0, startTime)
+        gain.gain.linearRampToValueAtTime(0.2, startTime + 0.04)
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 1.2)
         osc.connect(gain)
         gain.connect(ctx.destination)
-        osc.start(ctx.currentTime + idx * 0.12)
-        osc.stop(ctx.currentTime + idx * 0.12 + 1.3)
+        osc.start(startTime)
+        osc.stop(startTime + 1.25)
       })
     } catch {
       // AudioContext policy handled
     }
-  }
+  }, [])
 
-  // Master Sequential Release Timer: Drops 20 balls one by one onto the floor
+  // Master Sequential Release Timer: Drops 20 balls ONE BY ONE onto the floor
   useEffect(() => {
     if (!isOpen) return
 
     if (phase === 'bouncing') {
+      // 850ms interval between balls so she clearly sees each ball drop and bounce above the floor line!
       timerRef.current = window.setInterval(() => {
         setVisibleBalls((prev) => {
           if (prev >= 20) {
             if (timerRef.current) window.clearInterval(timerRef.current)
-            // Once all 20 balls bounce on floor for 2 seconds, auto-form SWEETY
+            // Once all 20 balls bounce on floor, auto-form SWEETY after 2.2 seconds
             window.setTimeout(() => {
               setPhase('forming_sweety')
-              playStarlightChimes()
-            }, 2000)
+              triggerStarBursts()
+              playPopperCelebrationAudio()
+            }, 2200)
             return 20
           }
           return prev + 1
         })
-      }, 550)
+      }, 850)
     }
 
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current)
     }
-  }, [isOpen, phase])
+  }, [isOpen, phase, triggerStarBursts, playPopperCelebrationAudio])
 
   // Reset celebration to drop balls again
   const handleReplay = () => {
     setVisibleBalls(1)
     setPhase('bouncing')
+    setStarBursts([])
   }
 
   // Fast forward straight to SWEETY formation
@@ -157,7 +265,8 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
     if (timerRef.current) window.clearInterval(timerRef.current)
     setVisibleBalls(20)
     setPhase('forming_sweety')
-    playStarlightChimes()
+    triggerStarBursts()
+    playPopperCelebrationAudio()
   }
 
   if (!isOpen) return null
@@ -178,10 +287,10 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
           <div className="celebration-brand-pill">
             <span className="brand-dot">✦</span>
             {phase === 'bouncing' && (
-              <span>RELEASING MEMORY ORB {visibleBalls} OF 20 · BOUNCING ON THE FLOOR</span>
+              <span>RELEASING MEMORY ORB {visibleBalls} OF 20 · BOUNCING ABOVE THE FLOOR LINE</span>
             )}
             {phase === 'forming_sweety' && (
-              <span>✦ 20 PRECIOUS MEMORIES FORMING "SWEETY" IN THE STARS ✦</span>
+              <span>✦ 20 PRECIOUS MEMORIES FORMING "SWEETY" · PARTY POPPERS BURST ✦</span>
             )}
             {phase === 'all_photos_grid' && (
               <span>✦ ALL 20 CHERISHED BIRTHDAY MEMORIES ✦</span>
@@ -193,6 +302,20 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
               <button className="celebration-btn skip-btn" onClick={handleSkipToSweety} title="Form SWEETY right away">
                 <FastForward size={14} />
                 <span>FORM SWEETY NAME</span>
+              </button>
+            )}
+
+            {phase === 'forming_sweety' && (
+              <button
+                className="celebration-btn pop-again-btn"
+                onClick={() => {
+                  triggerStarBursts()
+                  playPopperCelebrationAudio()
+                }}
+                title="Burst party poppers with stars again!"
+              >
+                <PartyPopper size={14} />
+                <span>BURST STARS ✨</span>
               </button>
             )}
 
@@ -242,10 +365,10 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
                 >
                   <span className="kicker-tag">CHAPTER EIGHT · SKY CELEBRATION</span>
                   <h2>
-                    Releasing Her Memories <em>One by One</em>
+                    Releasing Her Memories <em>One Ball at a Time</em>
                   </h2>
                   <p>
-                    Watch each 3D picture ball drop and bounce on the floor until all 20 are alive...
+                    Watch each 3D picture ball drop and bounce above the golden floor line ({visibleBalls}/20)
                   </p>
                 </motion.div>
               ) : (
@@ -266,10 +389,13 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
               )}
             </div>
 
-            {/* Glowing Golden Floor Plane for Bouncing */}
-            <div className={`celebration-floor-plane ${phase === 'forming_sweety' ? 'floor-fade' : ''}`}>
+            {/* Glowing Golden Floor Line (Strictly at FLOOR_LINE_Y_PCT) */}
+            <div
+              className={`celebration-floor-plane ${phase === 'forming_sweety' ? 'floor-fade' : ''}`}
+              style={{ top: `${FLOOR_LINE_Y_PCT}%` }}
+            >
               <div className="floor-neon-beam" />
-              <div className="floor-perspective-grid" />
+              <div className="floor-reflection-zone" />
             </div>
 
             {/* Glowing SVG Constellation Lines Connecting SWEETY */}
@@ -369,6 +495,8 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
 
             {/* ======================================================
                 THE 20 SPHERICAL 3D PHOTO BALLS
+                During Bouncing: Bottom rests strictly on FLOOR_LINE_Y_PCT (above line!)
+                During SWEETY: Centers on letter coordinates
                 ====================================================== */}
             <div className="celebration-balls-canvas">
               {CELEBRATION_20_PHOTOS.map((photo, index) => {
@@ -378,50 +506,60 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
 
                 const isBouncing = phase === 'bouncing'
                 const targetX = isBouncing ? coord.floorX : coord.letterX
-                const targetY = isBouncing ? coord.floorY : coord.letterY
+                // During bouncing: Position directly on floor line with transform translate(-50%, -100%)
+                // so the ball is ALWAYS strictly ABOVE the line!
+                const targetY = isBouncing ? FLOOR_LINE_Y_PCT : coord.letterY
 
                 return (
                   <motion.div
                     key={photo.id}
-                    className="celebration-ball-anchor"
+                    className={`celebration-ball-anchor ${isBouncing ? 'anchor-above-floor' : 'anchor-letter-center'}`}
                     style={{
                       left: `${targetX}%`,
                       top: `${targetY}%`,
                     }}
                     initial={{
                       left: `${coord.floorX}%`,
-                      top: `${coord.floorY}%`,
+                      top: `${FLOOR_LINE_Y_PCT}%`,
                       opacity: 0,
-                      scale: 0.4,
+                      scale: 0.5,
+                      y: -420, // Drops from top sky!
                     }}
                     animate={{
                       left: `${targetX}%`,
                       top: `${targetY}%`,
                       opacity: 1,
                       scale: 1,
+                      y: 0, // Hits the floor line!
                     }}
                     transition={{
+                      y: {
+                        type: 'spring',
+                        damping: 11,
+                        stiffness: 110,
+                        mass: 0.85,
+                      },
                       left: { duration: 1.3, ease: [0.34, 1.25, 0.64, 1] },
                       top: { duration: 1.3, ease: [0.34, 1.25, 0.64, 1] },
-                      opacity: { duration: 0.4 },
-                      scale: { duration: 0.5 },
+                      opacity: { duration: 0.35 },
+                      scale: { duration: 0.45 },
                     }}
                   >
-                    {/* Floor Shadow Under Ball (Only during bouncing phase) */}
+                    {/* Floor Contact Shadow (Directly on the floor beam) */}
                     {isBouncing && (
                       <div
-                        className="ball-floor-shadow"
+                        className="ball-floor-contact-shadow"
                         style={{
                           animationDelay: `${(index % 4) * 0.15}s`,
                         }}
                       />
                     )}
 
-                    {/* 3D Ball Container with Bounce Animation */}
+                    {/* 3D Ball Container with Bounce Animation strictly ABOVE the floor */}
                     <div
-                      className={`ball-bounce-wrapper ${isBouncing ? 'animate-floor-bounce' : 'animate-constellation-float'}`}
+                      className={`ball-bounce-wrapper ${isBouncing ? 'animate-above-floor-bounce' : 'animate-constellation-float'}`}
                       style={{
-                        animationDelay: isBouncing ? `${(index % 5) * 0.12}s` : `${index * 0.08}s`,
+                        animationDelay: isBouncing ? `${(index % 5) * 0.14}s` : `${index * 0.08}s`,
                       }}
                       onMouseEnter={() => setHoveredPhoto(photo)}
                       onMouseLeave={() => setHoveredPhoto(null)}
@@ -446,6 +584,77 @@ export const SkyCelebrationModal: React.FC<SkyCelebrationModalProps> = ({
                 )
               })}
             </div>
+
+            {/* ======================================================
+                PARTY POPPERS ("WAPPERS") BURST MODE WITH STARS!
+                Left & Right cannons burst stars when SWEETY is formed!
+                ====================================================== */}
+            {phase === 'forming_sweety' && (
+              <div className="party-poppers-layer" aria-hidden="true">
+                {/* Left Party Popper Cannon ("Wapper") */}
+                <motion.div
+                  className="popper-cannon popper-left"
+                  initial={{ scale: 0, rotate: -30 }}
+                  animate={{
+                    scale: [0, 1.25, 1],
+                    rotate: [-30, 45, 38],
+                  }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <div className="popper-cone">🎉</div>
+                  <div className="popper-burst-rings" />
+                </motion.div>
+
+                {/* Right Party Popper Cannon ("Wapper") */}
+                <motion.div
+                  className="popper-cannon popper-right"
+                  initial={{ scale: 0, rotate: 30 }}
+                  animate={{
+                    scale: [0, 1.25, 1],
+                    rotate: [30, -45, -38],
+                  }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <div className="popper-cone">🎉</div>
+                  <div className="popper-burst-rings" />
+                </motion.div>
+
+                {/* Starburst Particles Explosion */}
+                <div className="starburst-canvas">
+                  {starBursts.map((star) => (
+                    <motion.div
+                      key={star.id}
+                      className="starburst-particle"
+                      style={{
+                        color: star.color,
+                        fontSize: `${star.size}px`,
+                      }}
+                      initial={{
+                        left: `${star.x}%`,
+                        top: `${star.y}%`,
+                        opacity: 1,
+                        scale: 0.2,
+                        rotate: 0,
+                      }}
+                      animate={{
+                        left: `${star.targetX}%`,
+                        top: `${star.targetY}%`,
+                        opacity: [1, 1, 0.9, 0],
+                        scale: [0.2, 1.3, 1, 0.5],
+                        rotate: Math.random() > 0.5 ? 360 : -360,
+                      }}
+                      transition={{
+                        duration: star.duration,
+                        delay: star.delay,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    >
+                      {star.symbol}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Hover Tooltip Preview */}
             <AnimatePresence>
