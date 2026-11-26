@@ -1805,10 +1805,10 @@ function App() {
               ========================================================================= */}
           <div className="oracle-section" id="oracle">
             <div className="oracle-header">
-              <span className="banner-kicker">✦ POWERED BY GROQ AI & INFINITE WARMTH ✦</span>
-              <h3>The Cosmic Starlight Oracle</h3>
+              <span className="banner-kicker">✦ A MESSAGE ACROSS THE MILES · WITH ALL MY HEART ✦</span>
+              <h3>The Starlight Oracle & Personal Whisper</h3>
               <p>
-                Ask the universe for a personal blessing on your 20th birthday. Select an aspect of your life or whisper your own thought, then let Groq AI generate a bespoke poetic prophecy just for you.
+                Ask anything or whisper a thought from your heart, Thalli. Whether you choose a theme or type any question, hear a personal, loving reply written just for you on your 20th birthday.
               </p>
             </div>
 
@@ -1834,7 +1834,7 @@ function App() {
               <div className="oracle-custom-input">
                 <input
                   type="text"
-                  placeholder="Optional: Whisper a question or personal birthday thought to the stars..."
+                  placeholder="Whisper anything to me... ask a question, say hello, or share a thought ♥"
                   value={oracleCustomQuery}
                   onChange={(e) => setOracleCustomQuery(e.target.value)}
                   onKeyDown={(e) => {
