@@ -12,6 +12,7 @@ import {
   Eye,
   EyeOff,
   Flame,
+  Gift,
   Heart,
   Mail,
   MapPin,
@@ -32,6 +33,7 @@ import {
   X,
 } from 'lucide-react'
 import { generateOracleBlessing } from './services/groq'
+import { GiftBoxGate } from './components/GiftBoxGate'
 
 const BIRTHDAY = new Date('2026-11-27T00:00:00')
 
@@ -482,10 +484,23 @@ function App() {
     setIlluminatedStars(all)
   }
 
+  const [isGateUnlocked, setIsGateUnlocked] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [songTitle, setSongTitle] = useState("Undiporaadhey (Hushaaru)")
   const countdown = useCountdown()
+
+  const startMusicFromGate = () => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.play().then(() => {
+        setMusicOn(true)
+        setToast("♫ Playing: Undiporaadhey (Hushaaru) · Sweety's Favorite ♥")
+      }).catch(() => {
+        // Autoplay handled
+      })
+    }
+  }
 
   // Toggle reveal state for a specific photo card
   const togglePhotoReveal = (id: string, e?: React.MouseEvent) => {
@@ -681,6 +696,15 @@ function App() {
 
   return (
     <main>
+      <AnimatePresence>
+        {!isGateUnlocked && (
+          <GiftBoxGate
+            onUnlock={() => setIsGateUnlocked(true)}
+            onStartMusic={startMusicFromGate}
+          />
+        )}
+      </AnimatePresence>
+
       <audio
         ref={audioRef}
         src="./audio/undiporaadhey.mp3"
@@ -735,6 +759,14 @@ function App() {
           >
             {musicOn ? <Pause size={15} /> : <Music2 size={15} />}
             <span>{musicOn ? 'Pause' : 'Undiporaadhey ♫'}</span>
+          </button>
+          <button
+            className="sound-button gift-replay-btn"
+            onClick={() => setIsGateUnlocked(false)}
+            title="Replay the 3D Gift Box Surprise"
+          >
+            <Gift size={15} />
+            <span>Surprise 🎁</span>
           </button>
         </div>
       </nav>
