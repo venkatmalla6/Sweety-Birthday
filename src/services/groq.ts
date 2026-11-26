@@ -1,7 +1,6 @@
 // Groq AI client & Cosmic Starlight Oracle for Sweety's 20th Birthday
-const _k = 'bdxx51aQ4ShLZaUyQFSFHxZcFY3bydGWv02f9qcngPEiBrEnT9k_ksg'.split('').reverse().join('')
 const GROQ_API_KEY =
-  (import.meta as unknown as { env?: { VITE_GROQ_API_KEY?: string } }).env?.VITE_GROQ_API_KEY || _k
+  (import.meta as unknown as { env?: { VITE_GROQ_API_KEY?: string } }).env?.VITE_GROQ_API_KEY || ''
 
 const SYSTEM_PROMPT = `You are the Cosmic Starlight Oracle on a bespoke birthday website for Sweety Thalli. 
 Today, November 27, 2026, she is celebrating her milestone 20th birthday (born November 27, 2006).
