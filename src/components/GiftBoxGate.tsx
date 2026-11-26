@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Heart, Sparkles, KeyRound, Lock, ArrowRight } from 'lucide-react'
+import { Sparkles, KeyRound, Lock, ArrowRight } from 'lucide-react'
 
 interface GiftBoxGateProps {
   onUnlock: () => void
@@ -9,28 +9,28 @@ interface GiftBoxGateProps {
 
 type GateStage = 'idle' | 'prompt' | 'untying' | 'bursting_cap' | 'bursting_photos' | 'love_symbol' | 'entering'
 
-// 20 Photos for the spherical ball-dimension explosion
+// Exact 20 Photos for the spherical ball-dimension explosion (100% verified files)
 const BURST_PHOTOS = [
-  { src: './photos/01-hero-childhood-portrait.jpg', title: 'The Little Star' },
+  { src: './photos/01-hero-childhood-portrait.jpg', title: 'Childhood Star' },
   { src: './photos/02-first-birthday-memory.jpg', title: 'First Birthday' },
   { src: './photos/03-childhood-purple-jacket.jpg', title: 'Little Explorer' },
   { src: './photos/04-classical-dance-portrait.jpg', title: 'Kuchipudi Grace' },
-  { src: './photos/05-festive-black-kurti.jpg', title: 'Black Kurti Radiance' },
-  { src: './photos/06-casual-college-smile.jpg', title: 'College Days' },
-  { src: './photos/07-classical-dance-costume.jpg', title: 'Art & Devotion' },
-  { src: './photos/08-traditional-black-saree.jpg', title: 'Elegance in Black' },
-  { src: './photos/09-golden-hour-portrait.jpg', title: 'Golden Hour' },
-  { src: './photos/10-festive-twilight-celebration.jpg', title: 'Diwali Twilight' },
-  { src: './photos/11-candid-sunlit-radiance.jpg', title: 'Pure Radiance' },
-  { src: './photos/12-mirror-selfie-aesthetic.jpg', title: 'Mirror Aesthetic' },
-  { src: './photos/13-festive-diya-celebration.jpg', title: 'Diya Glow' },
+  { src: './photos/05-festive-black-outfit.jpg', title: 'Festive in Black' },
+  { src: './photos/06-playful-traditional-portrait.jpg', title: 'Playful Grace' },
+  { src: './photos/07-classical-dance-costume.jpg', title: 'Art & Poise' },
+  { src: './photos/08-birthday-stage-memory.jpg', title: 'Celebration Stage' },
+  { src: './photos/09-elegant-white-portrait.jpg', title: 'Serene Elegance' },
+  { src: './photos/10-guitar-memory.jpg', title: 'Musical Rhythm' },
+  { src: './photos/11-saree-memory.jpg', title: 'Timeless Beauty' },
+  { src: './photos/12-playful-closeup.jpg', title: 'Sweet Sparkle' },
+  { src: './photos/13-floral-celebration-portrait.jpg', title: 'Festive Radiance' },
   { src: './photos/14-traditional-gold-saree.jpg', title: 'Royal Gold Saree' },
-  { src: './photos/15-casual-chic-selfie.jpg', title: 'Sweet Smile' },
-  { src: './photos/16-playful-candid-expression.jpg', title: 'Playful Charm' },
-  { src: './photos/17-ethnic-grace-portrait.jpg', title: 'Silver Bangles' },
-  { src: './photos/18-traditional-saree-pose.jpg', title: 'Festive Poise' },
-  { src: './photos/19-outdoor-autumn-walk.jpg', title: 'Autumn Pathway' },
-  { src: './photos/20-autumn-trench-coat.jpg', title: 'Golden Fall Grace' },
+  { src: './photos/15-expressive-bangles-portrait.jpg', title: 'Silver Bangles' },
+  { src: './photos/16-outdoor-jhumka-poise.jpg', title: 'Jhumka Poise' },
+  { src: './photos/17-nature-pathway-grace.jpg', title: 'Autumn Pathway' },
+  { src: './photos/18-playful-casual-radiance.jpg', title: 'Casual Radiance' },
+  { src: './photos/19-chic-mirror-reflection.jpg', title: 'Mirror Chic' },
+  { src: './photos/20-autumn-trench-milestone.jpg', title: 'Autumn Trench' },
 ]
 
 export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic }) => {
@@ -42,18 +42,18 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
   // Generate 3D Spherical Ball Coordinates for the 20 photos
   const sphereCoordinates = React.useMemo(() => {
     return BURST_PHOTOS.map((_, index) => {
-      // Golden spiral / spherical distribution across angles
+      // Golden spiral distribution across spherical angles
       const phi = Math.acos(-1 + (2 * index) / BURST_PHOTOS.length)
       const theta = Math.sqrt(BURST_PHOTOS.length * Math.PI) * phi
       
-      // Radius distribution: inner layer (110-180px), outer layer (200-340px)
+      // Radius distribution: inner layer (170-220px), outer layer (250-340px)
       const isOuter = index % 2 === 0
-      const radius = isOuter ? 220 + (index % 4) * 35 : 130 + (index % 3) * 30
+      const radius = isOuter ? 260 + (index % 4) * 28 : 175 + (index % 3) * 25
       
       const x = radius * Math.cos(theta) * Math.sin(phi)
-      const y = radius * Math.sin(theta) * Math.sin(phi) * 0.85 // slightly flatten vertically for viewport
+      const y = radius * Math.sin(theta) * Math.sin(phi) * 0.88 // vertical viewport fit
       const z = radius * Math.cos(phi)
-      const scale = isOuter ? 0.95 : 1.15
+      const scale = isOuter ? 0.95 : 1.12
       const rotate = ((index * 29) % 30) - 15
 
       return { x, y, z, scale, rotate }
@@ -80,13 +80,19 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
     }
   }
 
-  // Handle stage transitions after unlock
+  const handleEnterWebsite = () => {
+    setStage('entering')
+    setTimeout(() => {
+      onUnlock()
+    }, 500)
+  }
+
+  // Handle stage transitions
   useEffect(() => {
     if (stage === 'untying') {
       // Ribbon unties for 700ms, then cap bursts!
       const timer = setTimeout(() => {
         setStage('bursting_cap')
-        // Automatically start Sid Sriram's "Undiporaadhey" right here!
         onStartMusic()
       }, 700)
       return () => clearTimeout(timer)
@@ -101,20 +107,21 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
     }
 
     if (stage === 'bursting_photos') {
-      // Photos expand and orbit for 2.8s, then love symbol appears in the center
+      // Photos burst and orbit for 2.4s, then love symbol appears in the center
       const timer = setTimeout(() => {
         setStage('love_symbol')
-      }, 2800)
+      }, 2400)
+      return () => clearTimeout(timer)
+    }
+
+    if (stage === 'love_symbol') {
+      // Automatically navigate to website after 3.8s of the love symbol animation!
+      const timer = setTimeout(() => {
+        handleEnterWebsite()
+      }, 3800)
       return () => clearTimeout(timer)
     }
   }, [stage, onStartMusic])
-
-  const handleEnterWebsite = () => {
-    setStage('entering')
-    setTimeout(() => {
-      onUnlock()
-    }, 600)
-  }
 
   if (stage === 'entering') {
     return (
@@ -122,7 +129,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
         className="gift-gate-overlay"
         initial={{ opacity: 1 }}
         animate={{ opacity: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.5 }}
       />
     )
   }
@@ -312,10 +319,11 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
               const coords = sphereCoordinates[i]
               const isLoveStage = stage === 'love_symbol'
 
-              // In the love stage, photos smoothly expand slightly to form a halo ring
-              const targetX = isLoveStage ? coords.x * 1.35 : coords.x
-              const targetY = isLoveStage ? coords.y * 1.35 : coords.y
-              const targetOpacity = isLoveStage ? 0.75 : 1
+              // In love stage, photos disperse outward to clear the center for the Love Symbol!
+              const targetX = isLoveStage ? coords.x * 1.55 : coords.x
+              const targetY = isLoveStage ? coords.y * 1.55 : coords.y
+              const targetOpacity = isLoveStage ? 0.65 : 1
+              const targetScale = isLoveStage ? coords.scale * 0.88 : coords.scale
 
               return (
                 <motion.div
@@ -325,19 +333,27 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                   animate={{
                     x: targetX,
                     y: targetY,
-                    scale: coords.scale,
+                    scale: targetScale,
                     opacity: targetOpacity,
                     rotate: coords.rotate,
                   }}
                   transition={{
                     type: 'spring',
-                    stiffness: 85,
-                    damping: 14,
-                    delay: i * 0.04, // staggered explosion!
+                    stiffness: 90,
+                    damping: 15,
+                    delay: i * 0.035, // staggered radial eruption!
                   }}
                 >
                   <div className="burst-photo-inner">
-                    <img src={photo.src} alt={photo.title} loading="eager" />
+                    <img
+                      src={photo.src}
+                      alt=""
+                      loading="eager"
+                      onError={(e) => {
+                        // Fallback gracefully without broken alt text
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
                     <div className="burst-photo-halo" />
                   </div>
                 </motion.div>
@@ -354,23 +370,23 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
           {stage === 'love_symbol' && (
             <motion.div
               className="love-symbol-container"
-              initial={{ opacity: 0, scale: 0.3 }}
+              initial={{ opacity: 0, scale: 0.4 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.1 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
               {/* Pulsing Glowing Neon Heart */}
               <div className="love-heart-wrapper">
                 <motion.div
                   className="love-heart-glow"
                   animate={{
-                    scale: [1, 1.22, 1],
-                    opacity: [0.6, 1, 0.6],
+                    scale: [1, 1.25, 1],
+                    opacity: [0.65, 1, 0.65],
                   }}
-                  transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+                  transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
                 />
 
-                <svg className="love-heart-svg" viewBox="0 0 100 90" width="120" height="110">
+                <svg className="love-heart-svg" viewBox="0 0 100 90" width="130" height="120">
                   <defs>
                     <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#ff5e7e" />
@@ -387,10 +403,10 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                     fill="url(#heartGradient)"
                     filter="url(#heartGlow)"
                     initial={{ pathLength: 0, scale: 0.8 }}
-                    animate={{ pathLength: 1, scale: [0.95, 1.05, 0.95] }}
+                    animate={{ pathLength: 1, scale: [0.96, 1.06, 0.96] }}
                     transition={{
-                      pathLength: { duration: 1.2, ease: 'easeInOut' },
-                      scale: { repeat: Infinity, duration: 1.6, ease: 'easeInOut' },
+                      pathLength: { duration: 1, ease: 'easeInOut' },
+                      scale: { repeat: Infinity, duration: 1.4, ease: 'easeInOut' },
                     }}
                   />
                 </svg>
@@ -398,18 +414,18 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                 <motion.div
                   className="heart-sparkle-center"
                   animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
+                  transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
                 >
-                  <Sparkles size={28} color="#fff" />
+                  <Sparkles size={32} color="#fff" />
                 </motion.div>
               </div>
 
               {/* Title & Celebration Message */}
               <motion.div
                 className="love-text-box"
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
               >
                 <span className="love-kicker">✦ WELCOME TO YOUR 20TH CELEBRATION ✦</span>
                 <h2 className="love-title">
