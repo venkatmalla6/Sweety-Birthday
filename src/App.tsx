@@ -206,8 +206,80 @@ export const allPhotos: PhotoMemory[] = [
     objectPosition: 'center 35%',
   },
   {
-    id: 'photo-13',
+    id: 'photo-15',
     number: '14',
+    title: 'Expressive Eyes & Silver Bangles',
+    category: 'gallery',
+    categoryLabel: 'Main Gallery',
+    date: 'Poetic Charm',
+    note: 'Captivating eyes framed by silver bangles in black and white — effortless charisma, traditional beauty, and quiet mystery.',
+    teaser: 'Expressive eyes framed by traditional silver bangles...',
+    src: './photos/15-expressive-bangles-portrait.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    id: 'photo-16',
+    number: '15',
+    title: 'Outdoor Jhumka Poise',
+    category: 'gallery',
+    categoryLabel: 'Main Gallery',
+    date: 'Sunlit Moments',
+    note: 'Adjusting your hair and silver jhumkas under the open sky — modern elegance blending with timeless tradition.',
+    teaser: 'Gentle sunlight, silver jhumkas, and effortless poise...',
+    src: './photos/16-outdoor-jhumka-poise.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    id: 'photo-17',
+    number: '16',
+    title: 'The Serene Green Avenue',
+    category: 'gallery',
+    categoryLabel: 'Main Gallery',
+    date: 'Nature & Peace',
+    note: 'Walking through tree-lined pathways with your signature blue spectacles — peaceful, grounded, and graceful.',
+    teaser: 'A peaceful walk along tree-lined pathways...',
+    src: './photos/17-nature-pathway-grace.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    id: 'photo-18',
+    number: '17',
+    title: 'Carefree Casual Sparkle',
+    category: 'gallery',
+    categoryLabel: 'Main Gallery',
+    date: 'Playful Smiles',
+    note: 'Cute spectacles, playful pout, and relaxed casual charm — reminding everyone that your everyday happiness is contagious.',
+    teaser: 'Cute spectacles and carefree playful energy...',
+    src: './photos/18-playful-casual-radiance.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    id: 'photo-19',
+    number: '18',
+    title: 'Chic Mirror Reflection',
+    category: 'gallery',
+    categoryLabel: 'Main Gallery',
+    date: 'Modern Style',
+    note: 'A trendy mirror selfie in lace and black — embracing modern youth with confidence, individuality, and flair.',
+    teaser: 'Trendy lace and confident modern style...',
+    src: './photos/19-chic-mirror-reflection.jpg',
+    objectPosition: 'center 25%',
+  },
+  {
+    id: 'photo-20',
+    number: '19',
+    title: 'Autumn Dreams & Paris Aesthetic',
+    category: 'gallery',
+    categoryLabel: 'Turning 20 Milestone',
+    date: 'Stepping into 20',
+    note: 'Standing in a carpet of golden leaves wearing a classic belted trench coat — evoking the dreamy streets of Paris as you step into your 20th year.',
+    teaser: 'Walking through golden autumn leaves in a classic trench coat...',
+    src: './photos/20-autumn-trench-milestone.jpg',
+    objectPosition: 'center 25%',
+  },
+  {
+    id: 'photo-13',
+    number: '20',
     title: 'May Life Always Bloom',
     category: 'finale',
     categoryLabel: 'Birthday Finale',
@@ -219,22 +291,28 @@ export const allPhotos: PhotoMemory[] = [
   },
 ]
 
-// Chronological arrangement of Sweety's journey for the cinematic video
+// Chronological arrangement of Sweety's journey for the cinematic video (20 Memories for 20 Years)
 export const chronologicalJourney: PhotoMemory[] = [
-  allPhotos.find((p) => p.id === 'photo-02')!, // 1. First Birthday Baby
-  allPhotos.find((p) => p.id === 'photo-01')!, // 2. Childhood Studio Portrait
-  allPhotos.find((p) => p.id === 'photo-03')!, // 3. Childhood Purple Jacket & Cap
-  allPhotos.find((p) => p.id === 'photo-04')!, // 4. Classical Dance Mudra
-  allPhotos.find((p) => p.id === 'photo-07')!, // 5. Classical Dance Costume & Jewels
-  allPhotos.find((p) => p.id === 'photo-05')!, // 6. Festive Black Outfit with Marigolds
-  allPhotos.find((p) => p.id === 'photo-06')!, // 7. Playful Traditional Portrait
-  allPhotos.find((p) => p.id === 'photo-10')!, // 8. Winter Jacket with Guitar
-  allPhotos.find((p) => p.id === 'photo-09')!, // 9. Serenity in White
-  allPhotos.find((p) => p.id === 'photo-11')!, // 10. Traditional Saree Memory
-  allPhotos.find((p) => p.id === 'photo-12')!, // 11. Candid Spectacles & Pout
+  allPhotos.find((p) => p.id === 'photo-02')!, // 1. First Birthday Baby (2007)
+  allPhotos.find((p) => p.id === 'photo-01')!, // 2. Childhood Studio Portrait (2009)
+  allPhotos.find((p) => p.id === 'photo-03')!, // 3. Childhood Purple Jacket & Cap (2010)
+  allPhotos.find((p) => p.id === 'photo-04')!, // 4. Classical Dance Mudra (2014)
+  allPhotos.find((p) => p.id === 'photo-07')!, // 5. Classical Dance Costume & Jewels (2016)
+  allPhotos.find((p) => p.id === 'photo-06')!, // 6. Playful Traditional Portrait
+  allPhotos.find((p) => p.id === 'photo-10')!, // 7. Winter Jacket with Guitar
+  allPhotos.find((p) => p.id === 'photo-09')!, // 8. Serenity in White
+  allPhotos.find((p) => p.id === 'photo-11')!, // 9. Traditional Saree Memory
+  allPhotos.find((p) => p.id === 'photo-12')!, // 10. Candid Spectacles & Pout
+  allPhotos.find((p) => p.id === 'photo-05')!, // 11. Festive Black Outfit with Marigolds
   allPhotos.find((p) => p.id === 'photo-08')!, // 12. Birthday Stage Evening in Black
-  allPhotos.find((p) => p.id === 'photo-14')!, // 13. Royal Gold Saree Milestone
-  allPhotos.find((p) => p.id === 'photo-13')!, // 14. Floral Celebration Finale
+  allPhotos.find((p) => p.id === 'photo-18')!, // 13. Carefree Casual Sparkle
+  allPhotos.find((p) => p.id === 'photo-19')!, // 14. Chic Mirror Reflection
+  allPhotos.find((p) => p.id === 'photo-15')!, // 15. Expressive Eyes & Silver Bangles
+  allPhotos.find((p) => p.id === 'photo-16')!, // 16. Outdoor Jhumka Poise
+  allPhotos.find((p) => p.id === 'photo-17')!, // 17. The Serene Green Avenue
+  allPhotos.find((p) => p.id === 'photo-14')!, // 18. Royal Gold Saree Milestone
+  allPhotos.find((p) => p.id === 'photo-20')!, // 19. Autumn Dreams & Paris Aesthetic (Turning 20)
+  allPhotos.find((p) => p.id === 'photo-13')!, // 20. Floral Celebration Finale
 ]
 
 export interface StarTribute {
@@ -1029,7 +1107,7 @@ function App() {
             className={`tab-btn ${galleryFilter === 'all' ? 'active' : ''}`}
             onClick={() => setGalleryFilter('all')}
           >
-            All 14 Memories
+            All 20 Memories
           </button>
           <button
             className={`tab-btn ${galleryFilter === 'childhood' ? 'active' : ''}`}
@@ -1875,7 +1953,7 @@ function App() {
                 <span className="brand-dot">✦</span>
                 {cinematicPhase === 'slideshow'
                   ? `SWEETY'S MEMORY RECAP · CHAPTER ${cinematicStep + 1} OF ${chronologicalJourney.length}`
-                  : '✦ ALL 14 MEMORIES ASSEMBLED IN ORDER · SKY CELEBRATION ✦'}
+                  : '✦ ALL 20 MEMORIES ASSEMBLED IN ORDER · SKY CELEBRATION ✦'}
               </div>
 
               <div className="cinematic-actions">
@@ -1979,7 +2057,7 @@ function App() {
               </div>
             )}
 
-            {/* PHASE 2: After all 14 pictures displayed -> Assembled in order + Firecrackers Blow! */}
+            {/* PHASE 2: After all 20 pictures displayed -> Assembled in order + Firecrackers Blow! */}
             {cinematicPhase === 'assembled' && (
               <div className="cinematic-assembled-stage">
                 <div className="assembled-header">
@@ -1994,12 +2072,12 @@ function App() {
                       YOU DESERVE THE WHOLE SKY <span className="title-heart">♥</span>
                     </h1>
                     <p className="banner-sub">
-                      Happy Birthday, Sweety Thalli · All 14 Memories Beautifully Assembled in Order
+                      Happy Birthday, Sweety Thalli · 20 Beautiful Memories for 20 Radiant Years
                     </p>
                   </motion.div>
                 </div>
 
-                {/* The Complete 14 Photos Arranged in Perfect Order */}
+                {/* The Complete 20 Photos Arranged in Perfect Order */}
                 <div className="assembled-grid-container">
                   <div className="assembled-grid">
                     {chronologicalJourney.map((photo, index) => (
