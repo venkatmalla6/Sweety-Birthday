@@ -483,6 +483,8 @@ function App() {
   }
 
   const audioRef = useRef<HTMLAudioElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [songTitle, setSongTitle] = useState("Undiporaadhey (Hushaaru)")
   const countdown = useCountdown()
 
   // Toggle reveal state for a specific photo card
@@ -592,7 +594,7 @@ function App() {
   const toggleMusic = async () => {
     const audio = audioRef.current
     if (!audio) {
-      setToast('Add your instrumental track to public/audio/romantic-instrumental.mp3')
+      setToast('Add your track to public/audio/undiporaadhey.mp3')
       return
     }
     if (musicOn) {
@@ -602,8 +604,12 @@ function App() {
       try {
         await audio.play()
         setMusicOn(true)
+        setToast(`♫ Playing: ${songTitle} · Sweety's Favorite Track ♥`)
       } catch {
-        setToast('Tap play again after adding your music file.')
+        setToast('Tap to choose or drop "undiporaadhey.mp3" to play!')
+        if (fileInputRef.current) {
+          fileInputRef.current.click()
+        }
       }
     }
   }
@@ -675,7 +681,38 @@ function App() {
 
   return (
     <main>
-      <audio ref={audioRef} src="./audio/romantic-instrumental.mp3" loop />
+      <audio
+        ref={audioRef}
+        src="./audio/undiporaadhey.mp3"
+        onError={(e) => {
+          const el = e.currentTarget
+          if (!el.src.includes('romantic-instrumental.mp3')) {
+            el.src = './audio/romantic-instrumental.mp3'
+          }
+        }}
+        loop
+      />
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="audio/*"
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file && audioRef.current) {
+            const url = URL.createObjectURL(file)
+            audioRef.current.src = url
+            audioRef.current.play().then(() => {
+              setMusicOn(true)
+              const cleanName = file.name.replace(/\.[^/.]+$/, '')
+              setSongTitle(cleanName)
+              setToast(`Now playing: ${cleanName} ♫`)
+            }).catch(() => {
+              setToast('Audio loaded. Tap Play to listen!')
+            })
+          }
+        }}
+      />
       <div className="grain" aria-hidden="true" />
 
       {/* Navigation */}
@@ -694,9 +731,10 @@ function App() {
             className="sound-button"
             onClick={toggleMusic}
             aria-label={musicOn ? 'Pause music' : 'Play music'}
+            title="Sweety's favorite track: Undiporaadhey (Hushaaru)"
           >
             {musicOn ? <Pause size={15} /> : <Music2 size={15} />}
-            <span>{musicOn ? 'Pause' : 'Music'}</span>
+            <span>{musicOn ? 'Pause' : 'Undiporaadhey ♫'}</span>
           </button>
         </div>
       </nav>
@@ -1317,34 +1355,56 @@ function App() {
               role="button"
               tabIndex={0}
             >
-              <div className="about-card-badge">
-                <UtensilsCrossed size={14} />
-                <span>FAVORITE CRAVING</span>
+              <div className="about-card-media">
+                <img
+                  src="./photos/about-chicken-feast.jpg"
+                  alt="Hot delicious chicken feast"
+                  className="about-card-img"
+                  loading="lazy"
+                />
+                <div className="about-card-media-overlay" />
+                <div className="about-pill-chip gold-chip">
+                  <UtensilsCrossed size={12} />
+                  <span>FAVORITE CRAVING</span>
+                </div>
+                <div className="about-media-badge gold-glow">
+                  <Flame size={16} />
+                </div>
               </div>
-              <div className="about-card-icon-circle gold-circle">
-                <Flame size={26} />
+
+              <div className="about-card-body">
+                <div className="about-card-header">
+                  <span className="about-card-kicker">Instant Happiness</span>
+                  <h3>Chicken Feasts 🍗</h3>
+                </div>
+                <p className="about-card-summary">
+                  Nothing beats the sheer joy on your face when enjoying hot, delicious chicken! The ultimate instant happiness formula.
+                </p>
+
+                <AnimatePresence>
+                  {openedAboutCards['food'] && (
+                    <motion.div
+                      className="about-card-secret"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.28 }}
+                    >
+                      <div className="about-card-secret-content">
+                        <span className="secret-note-tag">✦ PERSONAL NOTE</span>
+                        <p>
+                          "Sending you an unlimited virtual bucket of your favorite crispy, spicy chicken today! May your birthday table overflow with your favorite feast."
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="about-card-tap-cue">
+                  <span>{openedAboutCards['food'] ? '✦ TOUCH TO CLOSE NOTE' : '✦ TOUCH TO UNVEIL SECRET'}</span>
+                  <Sparkles size={12} />
+                </div>
               </div>
-              <h3>Chicken Feasts 🍗</h3>
-              <p className="about-card-summary">
-                Nothing beats the sheer joy on your face when enjoying hot, delicious chicken! The ultimate instant happiness formula.
-              </p>
-              <AnimatePresence>
-                {openedAboutCards['food'] && (
-                  <motion.div
-                    className="about-card-secret"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
-                    <p>
-                      *"Sending you an unlimited virtual bucket of your favorite crispy, spicy chicken today! May your birthday table overflow with your favorite feast."*
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <span className="about-card-tap-cue">
-                {openedAboutCards['food'] ? '✦ TOUCH TO CLOSE' : '✦ TOUCH TO UNVEIL SECRET'}
-              </span>
             </motion.div>
 
             {/* Card 2: Favorite Color Black */}
@@ -1355,34 +1415,56 @@ function App() {
               role="button"
               tabIndex={0}
             >
-              <div className="about-card-badge">
-                <Sparkles size={14} />
-                <span>SIGNATURE COLOR</span>
+              <div className="about-card-media">
+                <img
+                  src="./photos/about-black-elegance.jpg"
+                  alt="Midnight black elegance and stardust"
+                  className="about-card-img"
+                  loading="lazy"
+                />
+                <div className="about-card-media-overlay" />
+                <div className="about-pill-chip silver-chip">
+                  <Sparkles size={12} />
+                  <span>SIGNATURE COLOR</span>
+                </div>
+                <div className="about-media-badge black-glow">
+                  <Heart size={16} fill="currentColor" />
+                </div>
               </div>
-              <div className="about-card-icon-circle black-circle">
-                <Heart size={26} fill="currentColor" />
+
+              <div className="about-card-body">
+                <div className="about-card-header">
+                  <span className="about-card-kicker">Her Iconic Hue</span>
+                  <h3>Elegance in Black 🖤</h3>
+                </div>
+                <p className="about-card-summary">
+                  Her favorite color: Black. Sophisticated, bold, and stunning. Look at memory #05 and #08 — black was tailor-made for your grace.
+                </p>
+
+                <AnimatePresence>
+                  {openedAboutCards['black'] && (
+                    <motion.div
+                      className="about-card-secret"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.28 }}
+                    >
+                      <div className="about-card-secret-content">
+                        <span className="secret-note-tag">✦ PERSONAL NOTE</span>
+                        <p>
+                          "Whenever you wear black, you don't just enter a room — you effortlessly own the entire spotlight with timeless elegance."
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="about-card-tap-cue">
+                  <span>{openedAboutCards['black'] ? '✦ TOUCH TO CLOSE NOTE' : '✦ TOUCH TO UNVEIL SECRET'}</span>
+                  <Sparkles size={12} />
+                </div>
               </div>
-              <h3>Elegance in Black 🖤</h3>
-              <p className="about-card-summary">
-                Her favorite color: Black. Sophisticated, bold, and stunning. Look at memory #05 and #08 — black was tailor-made for your grace.
-              </p>
-              <AnimatePresence>
-                {openedAboutCards['black'] && (
-                  <motion.div
-                    className="about-card-secret"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
-                    <p>
-                      *"Whenever you wear black, you don't just enter a room — you effortlessly own the entire spotlight with timeless elegance."*
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <span className="about-card-tap-cue">
-                {openedAboutCards['black'] ? '✦ TOUCH TO CLOSE' : '✦ TOUCH TO UNVEIL SECRET'}
-              </span>
             </motion.div>
 
             {/* Card 3: Kuchipudi & Western Dance */}
@@ -1393,34 +1475,56 @@ function App() {
               role="button"
               tabIndex={0}
             >
-              <div className="about-card-badge">
-                <Music size={14} />
-                <span>ART & RHYTHM</span>
+              <div className="about-card-media">
+                <img
+                  src="./photos/about-kuchipudi-art.jpg"
+                  alt="Kuchipudi classical dance and artistic rhythm"
+                  className="about-card-img"
+                  loading="lazy"
+                />
+                <div className="about-card-media-overlay" />
+                <div className="about-pill-chip wine-chip">
+                  <Music size={12} />
+                  <span>ART & RHYTHM</span>
+                </div>
+                <div className="about-media-badge wine-glow">
+                  <Sparkles size={16} />
+                </div>
               </div>
-              <div className="about-card-icon-circle wine-circle">
-                <Sparkles size={26} />
+
+              <div className="about-card-body">
+                <div className="about-card-header">
+                  <span className="about-card-kicker">Heartbeats & Mudras</span>
+                  <h3>Kuchipudi & Western 💃</h3>
+                </div>
+                <p className="about-card-summary">
+                  Professional dedication in Kuchipudi mudras, storytelling, and footwork — blended with her energetic love for Western beats!
+                </p>
+
+                <AnimatePresence>
+                  {openedAboutCards['dance'] && (
+                    <motion.div
+                      className="about-card-secret"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.28 }}
+                    >
+                      <div className="about-card-secret-content">
+                        <span className="secret-note-tag">✦ PERSONAL NOTE</span>
+                        <p>
+                          "From centuries of classical heritage to modern dance beats, dance is not just your talent — rhythm breathes through your soul."
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="about-card-tap-cue">
+                  <span>{openedAboutCards['dance'] ? '✦ TOUCH TO CLOSE NOTE' : '✦ TOUCH TO UNVEIL SECRET'}</span>
+                  <Sparkles size={12} />
+                </div>
               </div>
-              <h3>Kuchipudi & Western 💃</h3>
-              <p className="about-card-summary">
-                Professional dedication in Kuchipudi mudras, storytelling, and footwork — blended with her energetic love for Western beats!
-              </p>
-              <AnimatePresence>
-                {openedAboutCards['dance'] && (
-                  <motion.div
-                    className="about-card-secret"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
-                    <p>
-                      *"From centuries of classical heritage to modern dance beats, dance is not just your talent — rhythm breathes through your soul."*
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <span className="about-card-tap-cue">
-                {openedAboutCards['dance'] ? '✦ TOUCH TO CLOSE' : '✦ TOUCH TO UNVEIL SECRET'}
-              </span>
             </motion.div>
 
             {/* Card 4: Dream Destination Paris */}
@@ -1431,34 +1535,56 @@ function App() {
               role="button"
               tabIndex={0}
             >
-              <div className="about-card-badge">
-                <MapPin size={14} />
-                <span>DREAM DESTINATION</span>
+              <div className="about-card-media">
+                <img
+                  src="./photos/about-paris-eiffel.jpg"
+                  alt="Paris Eiffel Tower illuminated at night"
+                  className="about-card-img"
+                  loading="lazy"
+                />
+                <div className="about-card-media-overlay" />
+                <div className="about-pill-chip blue-chip">
+                  <MapPin size={12} />
+                  <span>DREAM DESTINATION</span>
+                </div>
+                <div className="about-media-badge paris-glow">
+                  <Compass size={16} />
+                </div>
               </div>
-              <div className="about-card-icon-circle paris-circle">
-                <Compass size={26} />
+
+              <div className="about-card-body">
+                <div className="about-card-header">
+                  <span className="about-card-kicker">City of Lights</span>
+                  <h3>The Lights of Paris 🗼</h3>
+                </div>
+                <p className="about-card-summary">
+                  Her dream destination: Paris. The sparkling Eiffel Tower at midnight, quaint French cafés, and romantic cobblestone walks.
+                </p>
+
+                <AnimatePresence>
+                  {openedAboutCards['paris'] && (
+                    <motion.div
+                      className="about-card-secret"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.28 }}
+                    >
+                      <div className="about-card-secret-content">
+                        <span className="secret-note-tag">✦ PERSONAL NOTE</span>
+                        <p>
+                          "I pray that soon you walk along the Seine, smiling as the Eiffel Tower glitters just for you. You deserve to see Paris!"
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="about-card-tap-cue">
+                  <span>{openedAboutCards['paris'] ? '✦ TOUCH TO CLOSE NOTE' : '✦ TOUCH TO UNVEIL SECRET'}</span>
+                  <Sparkles size={12} />
+                </div>
               </div>
-              <h3>The Lights of Paris 🗼</h3>
-              <p className="about-card-summary">
-                Her dream destination: Paris. The sparkling Eiffel Tower at midnight, quaint French cafés, and romantic cobblestone walks.
-              </p>
-              <AnimatePresence>
-                {openedAboutCards['paris'] && (
-                  <motion.div
-                    className="about-card-secret"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
-                    <p>
-                      *"I pray that soon you walk along the Seine, smiling as the Eiffel Tower glitters just for you. You deserve to see Paris!"*
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <span className="about-card-tap-cue">
-                {openedAboutCards['paris'] ? '✦ TOUCH TO CLOSE' : '✦ TOUCH TO UNVEIL SECRET'}
-              </span>
             </motion.div>
           </div>
 
@@ -2250,12 +2376,13 @@ function App() {
 
       {/* Floating Music Button */}
       <button
-        className="floating-music"
+        className={`floating-music ${musicOn ? 'music-playing' : ''}`}
         onClick={toggleMusic}
+        title={`Sweety's Favorite: ${songTitle}`}
         aria-label={musicOn ? 'Pause background music' : 'Play background music'}
       >
         {musicOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-        <span>{musicOn ? 'SOUND ON' : 'PLAY MUSIC'}</span>
+        <span>{musicOn ? '♫ UNDIPORAADHEY' : 'PLAY HER SONG'}</span>
       </button>
     </main>
   )

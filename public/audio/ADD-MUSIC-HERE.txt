@@ -1,1 +1,5 @@
-Add a licensed romantic instrumental track here named romantic-instrumental.mp3. See README.md.
+Place your song file here:
+- Name: undiporaadhey.mp3 (Favorite song from Hushaaru, sung by Sid Sriram)
+- Fallback: romantic-instrumental.mp3
+
+The site will automatically load and play 'undiporaadhey.mp3' when users tap 'Play Her Song'!

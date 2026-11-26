@@ -1502,140 +1502,249 @@ a {
 /* 4 Interactive Feature Cards Grid */
 .about-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 28px;
   margin-bottom: 60px;
 }
 
 .about-card {
-  background: linear-gradient(145deg, rgba(28, 16, 22, 0.85), rgba(16, 11, 14, 0.95));
-  border: 1px solid rgba(199, 168, 120, 0.22);
+  background: linear-gradient(180deg, rgba(26, 15, 21, 0.95) 0%, rgba(14, 9, 12, 0.98) 100%);
+  border: 1px solid rgba(199, 168, 120, 0.24);
   border-radius: 20px;
-  padding: 32px 24px;
+  padding: 0;
   text-align: left;
   cursor: pointer;
   position: relative;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   display: flex;
   flex-direction: column;
 }
 
 .about-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(199, 168, 120, 0.6);
-  box-shadow: 0 20px 45px rgba(110, 23, 41, 0.35), 0 0 25px rgba(199, 168, 120, 0.2);
+  transform: translateY(-8px);
+  border-color: rgba(199, 168, 120, 0.65);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(199, 168, 120, 0.22);
 }
 
+.about-card.active-about,
 .about-card.is-active {
-  border-color: var(--gold);
-  background: linear-gradient(145deg, rgba(45, 18, 28, 0.95), rgba(19, 12, 16, 0.98));
-  box-shadow: 0 20px 50px rgba(110, 23, 41, 0.5), 0 0 35px rgba(199, 168, 120, 0.35);
+  border-color: #d4af37;
+  background: linear-gradient(180deg, rgba(38, 18, 26, 0.98) 0%, rgba(18, 11, 15, 0.99) 100%);
+  box-shadow: 0 24px 55px rgba(110, 23, 41, 0.5), 0 0 35px rgba(199, 168, 120, 0.35);
 }
 
-.about-card-badge {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 26px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease;
+/* Card Media Header */
+.about-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #090608;
 }
 
-.about-card:hover .about-card-badge {
-  transform: scale(1.1) rotate(5deg);
+.about-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
 }
 
-.gold-circle {
-  background: radial-gradient(circle, #573212, #241407);
-  border: 1.5px solid #d4af37;
+.about-card:hover .about-card-img {
+  transform: scale(1.07);
+}
+
+.about-card-media-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(14, 9, 12, 0.1) 0%, rgba(14, 9, 12, 0.35) 50%, rgba(14, 9, 12, 0.98) 100%);
+  pointer-events: none;
+}
+
+/* Floating Pill Chip */
+.about-pill-chip {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  z-index: 2;
+}
+
+.about-pill-chip.gold-chip {
+  background: rgba(36, 20, 7, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.6);
   color: #f7d774;
 }
 
-.black-circle {
-  background: radial-gradient(circle, #2a2a2a, #0d0d0d);
-  border: 1.5px solid #888888;
+.about-pill-chip.silver-chip {
+  background: rgba(22, 22, 26, 0.9);
+  border: 1px solid rgba(210, 210, 220, 0.55);
+  color: #f0f0f5;
+}
+
+.about-pill-chip.wine-chip {
+  background: rgba(45, 12, 20, 0.9);
+  border: 1px solid rgba(216, 146, 149, 0.6);
+  color: #ffc4c7;
+}
+
+.about-pill-chip.blue-chip {
+  background: rgba(18, 25, 45, 0.9);
+  border: 1px solid rgba(140, 166, 219, 0.6);
+  color: #d6e2ff;
+}
+
+/* Floating Media Icon Badge */
+.about-media-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover .about-media-badge {
+  transform: scale(1.12) rotate(6deg);
+}
+
+.about-media-badge.gold-glow {
+  background: radial-gradient(circle, #5a3610, #201205);
+  border: 1px solid #d4af37;
+  color: #fde07a;
+}
+
+.about-media-badge.black-glow {
+  background: radial-gradient(circle, #333333, #111111);
+  border: 1px solid #8e8e93;
   color: #ffffff;
 }
 
-.wine-circle {
-  background: radial-gradient(circle, #6e1729, #290810);
-  border: 1.5px solid #d89295;
+.about-media-badge.wine-glow {
+  background: radial-gradient(circle, #6e1729, #2b0810);
+  border: 1px solid #d89295;
   color: #ffb6c1;
 }
 
-.paris-circle {
-  background: radial-gradient(circle, #2d3154, #121424);
-  border: 1.5px solid #8ca6db;
-  color: #e0eaff;
+.about-media-badge.paris-glow {
+  background: radial-gradient(circle, #2d385a, #101426);
+  border: 1px solid #8ca6db;
+  color: #c7d8ff;
 }
 
-.about-tag {
-  font-size: 8px;
-  letter-spacing: 2.2px;
+/* Card Body */
+.about-card-body {
+  padding: 18px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.about-card-header {
+  margin-bottom: 8px;
+}
+
+.about-card-kicker {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--gold);
-  font-weight: 600;
-  display: block;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  opacity: 0.9;
 }
 
 .about-card h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 500;
   color: #ffffff;
-  margin: 0 0 10px;
-  line-height: 1.15;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .about-card-summary {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.7;
-  color: #d1b8b6;
+  color: #cfbcbb;
   margin: 0 0 16px;
   flex-grow: 1;
 }
 
+/* Secret Note Accordion */
+.about-card-secret {
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.about-card-secret-content {
+  padding: 14px 16px;
+  background: rgba(18, 11, 15, 0.9);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.secret-note-tag {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+}
+
+.about-card-secret-content p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #f7e8e5;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Tap Cue Footer */
 .about-card-tap-cue {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 8px;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(199, 168, 120, 0.12);
+  margin-top: auto;
+  font-size: 8.5px;
+  font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--gold-light);
-  font-weight: 600;
-  margin-top: auto;
   opacity: 0.85;
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
-.about-card-secret {
-  margin-top: 18px;
-  padding: 16px 18px;
-  background: rgba(10, 6, 8, 0.7);
-  border-left: 2px solid var(--gold);
-  border-radius: 0 12px 12px 0;
-  font-size: 11.5px;
-  line-height: 1.75;
-  color: #f7e7e2;
-  font-style: italic;
-  animation: fadeInSecret 0.35s ease-out;
-}
-
-@keyframes fadeInSecret {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.about-card:hover .about-card-tap-cue {
+  opacity: 1;
+  color: var(--gold);
 }
 
 /* ==========================================================================
@@ -3089,11 +3198,15 @@ footer {
 
   .about-cards-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 20px;
   }
 
   .about-card {
-    padding: 24px 20px;
+    padding: 0;
+  }
+
+  .about-card-body {
+    padding: 16px 18px 20px;
   }
 
   .distance-hug-box {
