@@ -278,8 +278,20 @@ export const allPhotos: PhotoMemory[] = [
     objectPosition: 'center 25%',
   },
   {
-    id: 'photo-13',
+    id: 'photo-21',
     number: '20',
+    title: 'Autumn Whispers & Golden Leaves',
+    category: 'gallery',
+    categoryLabel: 'Turning 20 Milestone',
+    date: 'Parisian Warmth',
+    note: 'Golden autumn foliage, classic beige trench coat, and quiet reflection — carrying the elegance of Paris and the warmth of a new decade.',
+    teaser: 'Golden leaves, trench coat elegance, and a quiet autumn breeze...',
+    src: './photos/21-autumn-leaves-reflection.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    id: 'photo-13',
+    number: '21',
     title: 'May Life Always Bloom',
     category: 'finale',
     categoryLabel: 'Birthday Finale',
@@ -291,7 +303,7 @@ export const allPhotos: PhotoMemory[] = [
   },
 ]
 
-// Chronological arrangement of Sweety's journey for the cinematic video (20 Memories for 20 Years)
+// Chronological arrangement of Sweety's journey for the cinematic video
 export const chronologicalJourney: PhotoMemory[] = [
   allPhotos.find((p) => p.id === 'photo-02')!, // 1. First Birthday Baby (2007)
   allPhotos.find((p) => p.id === 'photo-01')!, // 2. Childhood Studio Portrait (2009)
@@ -311,8 +323,9 @@ export const chronologicalJourney: PhotoMemory[] = [
   allPhotos.find((p) => p.id === 'photo-16')!, // 16. Outdoor Jhumka Poise
   allPhotos.find((p) => p.id === 'photo-17')!, // 17. The Serene Green Avenue
   allPhotos.find((p) => p.id === 'photo-14')!, // 18. Royal Gold Saree Milestone
-  allPhotos.find((p) => p.id === 'photo-20')!, // 19. Autumn Dreams & Paris Aesthetic (Turning 20)
-  allPhotos.find((p) => p.id === 'photo-13')!, // 20. Floral Celebration Finale
+  allPhotos.find((p) => p.id === 'photo-20')!, // 19. Autumn Dreams & Paris Aesthetic
+  allPhotos.find((p) => p.id === 'photo-21')!, // 20. Autumn Whispers & Golden Leaves
+  allPhotos.find((p) => p.id === 'photo-13')!, // 21. Floral Celebration Finale
 ]
 
 export interface StarTribute {
@@ -1107,7 +1120,7 @@ function App() {
             className={`tab-btn ${galleryFilter === 'all' ? 'active' : ''}`}
             onClick={() => setGalleryFilter('all')}
           >
-            All 20 Memories
+            All Memories ({allPhotos.length})
           </button>
           <button
             className={`tab-btn ${galleryFilter === 'childhood' ? 'active' : ''}`}
@@ -1953,7 +1966,7 @@ function App() {
                 <span className="brand-dot">✦</span>
                 {cinematicPhase === 'slideshow'
                   ? `SWEETY'S MEMORY RECAP · CHAPTER ${cinematicStep + 1} OF ${chronologicalJourney.length}`
-                  : '✦ ALL 20 MEMORIES ASSEMBLED IN ORDER · SKY CELEBRATION ✦'}
+                  : `✦ ALL ${chronologicalJourney.length} MEMORIES ASSEMBLED IN ORDER · SKY CELEBRATION ✦`}
               </div>
 
               <div className="cinematic-actions">
@@ -2072,7 +2085,7 @@ function App() {
                       YOU DESERVE THE WHOLE SKY <span className="title-heart">♥</span>
                     </h1>
                     <p className="banner-sub">
-                      Happy Birthday, Sweety Thalli · 20 Beautiful Memories for 20 Radiant Years
+                      Happy Birthday, Sweety Thalli · Every Beautiful Memory Assembled in Order
                     </p>
                   </motion.div>
                 </div>

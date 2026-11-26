@@ -539,7 +539,7 @@ a {
   font-size: clamp(40px, 5.5vw, 64px);
 }
 
-.section-heading > p,
+.section-heading>p,
 .letter-intro,
 .cake-copy,
 .about-intro {
@@ -1066,8 +1066,8 @@ a {
   padding: 16px 4px 6px;
 }
 
-.memory-info > span,
-.timeline-card > span {
+.memory-info>span,
+.timeline-card>span {
   font-size: 8px;
   letter-spacing: 1.5px;
   color: var(--gold);
@@ -1477,7 +1477,7 @@ a {
   box-shadow: 0 8px 20px #0008;
 }
 
-.cake-section > .primary-button {
+.cake-section>.primary-button {
   margin-top: 24px;
 }
 
@@ -1631,6 +1631,7 @@ a {
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1741,9 +1742,12 @@ a {
 }
 
 @keyframes heartPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.25);
   }
@@ -1789,9 +1793,11 @@ a {
     opacity: 1;
     transform: translateY(0) scale(0.6) rotate(0deg);
   }
+
   50% {
     transform: translateY(-130px) scale(1.3) rotate(15deg);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-280px) scale(1.6) rotate(-10deg);
@@ -1955,6 +1961,7 @@ a {
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -2293,6 +2300,7 @@ a {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -2422,7 +2430,7 @@ a {
   font-size: clamp(48px, 6.2vw, 75px);
 }
 
-.finale-content > p {
+.finale-content>p {
   max-width: 540px;
   margin: 25px auto;
   color: #b9a7a5;
@@ -2695,7 +2703,7 @@ footer {
   place-items: center;
 }
 
-.fireworks-layer > button {
+.fireworks-layer>button {
   position: absolute;
   top: 25px;
   right: 25px;
@@ -2733,22 +2741,26 @@ footer {
   left: 18%;
   top: 20%;
 }
+
 .f2 {
   right: 20%;
   top: 15%;
   animation-delay: 0.4s;
   color: #c77b8a;
 }
+
 .f3 {
   left: 25%;
   bottom: 20%;
   animation-delay: 0.8s;
 }
+
 .f4 {
   right: 18%;
   bottom: 22%;
   animation-delay: 1.1s;
 }
+
 .f5 {
   left: 50%;
   top: 10%;
@@ -2798,9 +2810,11 @@ footer {
     transform: scale(0.2) rotate(0);
     opacity: 0;
   }
+
   25% {
     opacity: 1;
   }
+
   100% {
     transform: scale(1.5) rotate(80deg);
     opacity: 0;
@@ -2812,12 +2826,15 @@ footer {
   .hero-grid-container {
     gap: 36px;
   }
+
   .childhood-grid {
     gap: 20px;
   }
+
   .talents-grid {
     gap: 24px;
   }
+
   .memory-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 18px;
@@ -2829,10 +2846,12 @@ footer {
     padding: 0 5%;
     height: 66px;
   }
+
   .nav-actions {
     gap: 14px;
   }
-  .nav-actions > a {
+
+  .nav-actions>a {
     display: none;
   }
 
@@ -2840,22 +2859,27 @@ footer {
     min-height: auto;
     padding: 110px 0 70px;
   }
+
   .hero:before {
     width: 330px;
     height: 330px;
   }
+
   .hero:after {
     width: 460px;
     height: 460px;
   }
+
   .hero-orbit {
     width: 540px;
     height: 540px;
   }
+
   .orbit-two {
     width: 650px;
     height: 650px;
   }
+
   .hero-side-note {
     display: none;
   }
@@ -2914,6 +2938,7 @@ footer {
   .timeline-item {
     padding-right: 30px;
   }
+
   .timeline-item.right {
     padding-left: 30px;
   }
@@ -2921,6 +2946,7 @@ footer {
   .lightbox-arrow.prev {
     left: 10px;
   }
+
   .lightbox-arrow.next {
     right: 10px;
   }
@@ -2931,6 +2957,7 @@ footer {
     font-size: 8.5px;
     letter-spacing: 2px;
   }
+
   .sound-button {
     padding: 8px 12px;
   }
@@ -2939,17 +2966,21 @@ footer {
     font-size: 19px;
     margin-top: 15px;
   }
+
   .hero h1 {
     font-size: 52px;
   }
+
   .hero-copy {
     font-size: 12px;
   }
+
   .hero-actions {
     flex-direction: column;
     width: 100%;
     gap: 12px;
   }
+
   .primary-button,
   .outline-button {
     width: 100%;
@@ -2963,12 +2994,15 @@ footer {
   .countdown-section {
     padding: 60px 0;
   }
+
   .countdown {
     gap: 18px;
   }
+
   .time-unit strong {
     font-size: 36px;
   }
+
   .time-unit span {
     font-size: 7.5px;
   }
@@ -2999,6 +3033,7 @@ footer {
   .gallery-tabs {
     gap: 8px;
   }
+
   .tab-btn {
     padding: 8px 14px;
     font-size: 8px;
@@ -3007,6 +3042,7 @@ footer {
   .letter-paper {
     padding: 30px 22px;
   }
+
   .letter-paper p {
     font-size: 15px;
   }
@@ -3014,20 +3050,24 @@ footer {
   .timeline {
     margin-top: 45px;
   }
+
   .timeline:before {
     left: 15px;
   }
+
   .timeline-item,
   .timeline-item.right {
     width: 100%;
     margin-left: 0;
     padding: 0 0 28px 48px;
   }
+
   .timeline-marker,
   .timeline-item.right .timeline-marker {
     left: 0;
     right: auto;
   }
+
   .timeline-card {
     padding: 18px;
   }
@@ -3036,10 +3076,12 @@ footer {
     grid-template-columns: 1fr;
     gap: 14px;
   }
+
   .reason-card {
     padding: 22px;
     min-height: auto;
   }
+
   .reason-card h3 {
     font-size: 22px;
     margin-top: 18px;
@@ -3049,16 +3091,20 @@ footer {
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
   .about-card {
     padding: 24px 20px;
   }
+
   .distance-hug-box {
     padding: 35px 20px;
     margin-bottom: 50px;
   }
+
   .hug-send-button {
     padding: 14px 26px;
   }
+
   .open-when-grid {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -3068,9 +3114,11 @@ footer {
     min-height: 600px;
     padding: 60px 0;
   }
-  .finale-content > p {
+
+  .finale-content>p {
     font-size: 17px;
   }
+
   .finale-portrait-wrapper {
     max-width: 290px;
   }
@@ -3093,18 +3141,22 @@ footer {
     width: 38px;
     height: 38px;
   }
+
   .lightbox-arrow.prev {
     left: 6px;
   }
+
   .lightbox-arrow.next {
     right: 6px;
   }
+
   .lightbox-close {
     top: 15px;
     right: 15px;
     width: 38px;
     height: 38px;
   }
+
   .lightbox-content {
     width: 85vw;
   }
@@ -3265,6 +3317,7 @@ footer {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(1.06);
   }
@@ -3473,8 +3526,8 @@ footer {
 
 .assembled-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
 }
 
 .assembled-card {
@@ -3562,6 +3615,7 @@ footer {
   font-size: 90px;
   animation-delay: 0.1s;
 }
+
 .fw-2 {
   right: 10%;
   top: 14%;
@@ -3569,6 +3623,7 @@ footer {
   font-size: 95px;
   animation-delay: 0.4s;
 }
+
 .fw-3 {
   left: 18%;
   top: 25%;
@@ -3576,6 +3631,7 @@ footer {
   font-size: 80px;
   animation-delay: 0.7s;
 }
+
 .fw-4 {
   right: 18%;
   top: 28%;
@@ -3583,6 +3639,7 @@ footer {
   font-size: 85px;
   animation-delay: 1.1s;
 }
+
 .fw-5 {
   left: 50%;
   top: 6%;
@@ -3590,6 +3647,7 @@ footer {
   font-size: 100px;
   animation-delay: 0.3s;
 }
+
 .fw-6 {
   left: 5%;
   top: 48%;
@@ -3597,6 +3655,7 @@ footer {
   font-size: 75px;
   animation-delay: 1.4s;
 }
+
 .fw-7 {
   right: 6%;
   top: 46%;
@@ -3604,6 +3663,7 @@ footer {
   font-size: 80px;
   animation-delay: 0.8s;
 }
+
 .fw-8 {
   left: 14%;
   bottom: 12%;
@@ -3611,6 +3671,7 @@ footer {
   font-size: 85px;
   animation-delay: 1.6s;
 }
+
 .fw-9 {
   right: 14%;
   bottom: 15%;
@@ -3618,6 +3679,7 @@ footer {
   font-size: 90px;
   animation-delay: 0.2s;
 }
+
 .fw-10 {
   left: 28%;
   top: 10%;
@@ -3625,6 +3687,7 @@ footer {
   font-size: 70px;
   animation-delay: 1.2s;
 }
+
 .fw-11 {
   right: 28%;
   top: 10%;
@@ -3632,6 +3695,7 @@ footer {
   font-size: 75px;
   animation-delay: 0.6s;
 }
+
 .fw-12 {
   left: 3%;
   top: 28%;
@@ -3639,6 +3703,7 @@ footer {
   font-size: 65px;
   animation-delay: 1.8s;
 }
+
 .fw-13 {
   right: 4%;
   top: 26%;
@@ -3646,6 +3711,7 @@ footer {
   font-size: 70px;
   animation-delay: 1.0s;
 }
+
 .fw-14 {
   left: 50%;
   bottom: 8%;
@@ -3653,6 +3719,7 @@ footer {
   font-size: 85px;
   animation-delay: 1.5s;
 }
+
 .fw-15 {
   left: 38%;
   top: 18%;
@@ -3660,6 +3727,7 @@ footer {
   font-size: 60px;
   animation-delay: 0.5s;
 }
+
 .fw-16 {
   right: 38%;
   top: 20%;
@@ -3667,6 +3735,7 @@ footer {
   font-size: 65px;
   animation-delay: 1.3s;
 }
+
 .fw-17 {
   left: 8%;
   bottom: 35%;
@@ -3674,6 +3743,7 @@ footer {
   font-size: 70px;
   animation-delay: 0.9s;
 }
+
 .fw-18 {
   right: 8%;
   bottom: 35%;
@@ -3690,6 +3760,7 @@ footer {
   color: #ffffff;
   animation-delay: 0.2s;
 }
+
 .fw-sparkle-2 {
   right: 22%;
   top: 16%;
@@ -3697,6 +3768,7 @@ footer {
   color: #fff1f2;
   animation-delay: 0.8s;
 }
+
 .fw-sparkle-3 {
   left: 10%;
   top: 38%;
@@ -3704,6 +3776,7 @@ footer {
   color: #fef08a;
   animation-delay: 1.4s;
 }
+
 .fw-sparkle-4 {
   right: 12%;
   top: 36%;
@@ -3711,6 +3784,7 @@ footer {
   color: #fed7aa;
   animation-delay: 0.6s;
 }
+
 .fw-sparkle-5 {
   left: 45%;
   top: 22%;
@@ -3718,6 +3792,7 @@ footer {
   color: #ffffff;
   animation-delay: 1.0s;
 }
+
 .fw-sparkle-6 {
   right: 44%;
   top: 24%;
@@ -3725,6 +3800,7 @@ footer {
   color: #ffe4e6;
   animation-delay: 1.6s;
 }
+
 .fw-sparkle-7 {
   left: 20%;
   bottom: 22%;
@@ -3732,6 +3808,7 @@ footer {
   color: #fde047;
   animation-delay: 0.4s;
 }
+
 .fw-sparkle-8 {
   right: 20%;
   bottom: 20%;
@@ -3750,6 +3827,7 @@ footer {
   animation: rocketBurst 2s infinite ease-out;
   animation-delay: 0.2s;
 }
+
 .fw-rocket-2 {
   position: absolute;
   right: 16%;
@@ -3759,6 +3837,7 @@ footer {
   animation: rocketBurst 2.3s infinite ease-out;
   animation-delay: 0.8s;
 }
+
 .fw-rocket-3 {
   position: absolute;
   left: 35%;
@@ -3768,6 +3847,7 @@ footer {
   animation: rocketBurst 2.1s infinite ease-out;
   animation-delay: 1.4s;
 }
+
 .fw-rocket-4 {
   position: absolute;
   right: 34%;
@@ -3783,15 +3863,18 @@ footer {
     transform: translateY(0) scale(0.6);
     opacity: 0.9;
   }
+
   60% {
     transform: translateY(-55vh) scale(1);
     opacity: 1;
   }
+
   85% {
     transform: translateY(-65vh) scale(2.2);
     opacity: 0.9;
     filter: drop-shadow(0 0 15px #ffd89b);
   }
+
   100% {
     transform: translateY(-68vh) scale(3);
     opacity: 0;
@@ -3809,27 +3892,33 @@ footer {
   .cinematic-topbar {
     padding: 12px 18px;
   }
+
   .cinematic-brand {
     font-size: 8px;
     letter-spacing: 1.5px;
   }
+
   .cinematic-photo-frame {
     width: min(280px, 75vw);
   }
+
   .tray-slot {
     width: 36px;
     height: 46px;
   }
+
   .assembled-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
   }
+
   .grand-fireworks-banner {
     top: 10%;
     padding: 12px 20px;
     white-space: normal;
     width: 90%;
   }
+
   .grand-fireworks-banner h1 {
     font-size: 24px;
     line-height: 1.1;
@@ -3840,16 +3929,20 @@ footer {
   .cinematic-photo-frame {
     width: min(240px, 70vw);
   }
+
   .cinematic-caption h3 {
     font-size: 20px;
   }
+
   .cinematic-caption p {
     font-size: 10px;
   }
+
   .tray-slot {
     width: 30px;
     height: 38px;
   }
+
   .assembled-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
@@ -3857,6 +3950,7 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
