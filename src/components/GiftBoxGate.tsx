@@ -99,16 +99,10 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
       setStage('bursting_photos')
     }, 1100)
 
-    // Stage 4: Love symbol appears in center at 2100ms
+    // Stage 4: Love symbol appears in center at 2000ms and waits for her click!
     setTimeout(() => {
       setStage('love_symbol')
-    }, 2100)
-
-    // Stage 5: Exactly 3 seconds of showing the burst & photos (total 4100ms from unlock)
-    // Then AUTOMATICALLY navigate to the website!
-    setTimeout(() => {
-      handleEnterWebsite()
-    }, 4500)
+    }, 2000)
   }
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -137,15 +131,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
   }
 
   return (
-    <div
-      className="gift-gate-overlay"
-      onClick={() => {
-        // If photos or love symbol are already bursting, tapping anywhere will also navigate to website
-        if (stage === 'bursting_photos' || stage === 'love_symbol') {
-          handleEnterWebsite()
-        }
-      }}
-    >
+    <div className="gift-gate-overlay">
       {/* Background Starfield Particles */}
       <div className="gift-gate-stars" />
       <div className="gift-gate-glow" />
@@ -384,10 +370,6 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.1 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => {
-                e.stopPropagation()
-                handleEnterWebsite()
-              }}
             >
               {/* Pulsing Glowing Neon Heart */}
               <div className="love-heart-wrapper">
