@@ -119,7 +119,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
       setErrorMsg('')
       startBurstSequence()
     } else {
-      setErrorMsg('Oops! That\'s not the secret key. Try "Thalli" 💖')
+      setErrorMsg("That's not quite it! Think of that one special name... 💖")
       setShake(true)
       setTimeout(() => setShake(false), 500)
     }
@@ -294,7 +294,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                     <input
                       type="text"
                       autoFocus
-                      placeholder="Enter secret name (e.g. Thalli)..."
+                      placeholder="Enter that special name..."
                       value={password}
                       onChange={(e) => {
                         setPassword(e.target.value)
@@ -307,7 +307,7 @@ export const GiftBoxGate: React.FC<GiftBoxGateProps> = ({ onUnlock, onStartMusic
                   {errorMsg && <p className="gift-error-msg">{errorMsg}</p>}
 
                   <p className="gift-hint-text">
-                    Hint: What does he lovingly call you? (Fixed: <strong>"Thalli"</strong>)
+                    Clue: <em>"The name that you like the most, which was called by me"</em> ♥
                   </p>
 
                   <button type="submit" className="gift-submit-btn">
